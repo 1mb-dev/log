@@ -1,0 +1,34 @@
+# deploy/Caddyfile.example -- sample Caddy vhost block for a markgo deployment.
+#
+# Copy the block below into your existing Caddyfile, or use this file standalone:
+#   sudo cp deploy/Caddyfile.example /etc/caddy/sites/log.1mb.dev.caddy
+#   sudo systemctl reload caddy
+#
+# Caddy auto-provisions TLS via Let's Encrypt on first request -- no certbot needed.
+# Replace `log.1mb.dev` with your domain before deploying.
+
+log.1mb.dev {
+	# Markgo binds to localhost. Caddy fronts it for TLS, compression, and access logging.
+	# The port must match PORT in .env. This reference deployment uses 3001 to coexist
+	# with other services on the same host.
+	reverse_proxy 127.0.0.1:3001
+
+	# Baseline security headers. M3 polish tightens these further (CSP especially,
+	# once the static asset surface stabilises).
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "interest-cohort=(), browsing-topics=()"
+		# Markgo controls Cache-Control for /static/* and /sw.js; do not override here.
+	}
+
+	encode gzip zstd
+
+	log {
+		output file /var/log/caddy/log.1mb.dev.access.log {
+			roll_size 10mb
+			roll_keep 5
+		}
+	}
+}

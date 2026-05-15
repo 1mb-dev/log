@@ -1,0 +1,27 @@
+# Private working notes (handoff, project agent scratch)
+todos/
+
+# Build artifacts
+build/
+dist/
+*.exe
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Editor + OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+
+# Markgo runtime artifacts (created on the deploy target, not in the repo)
+uploads/
