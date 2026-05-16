@@ -39,6 +39,25 @@ A markgo deployment with:
 
 Everything is configured via `.env`. The full feature surface lives in [markgo's docs](https://github.com/1mb-dev/markgo/tree/main/docs).
 
+## When to use this
+
+Fork this harness when you want **a self-hosted, markdown-in-git blog with a small operational footprint** -- single Go binary, one systemd unit, Caddy in front for TLS. The reference deployment runs comfortably on a small VPS (markgo itself is ~15 MiB resident).
+
+**Choose this over a static-site generator (Hugo, Jekyll, Astro) when:**
+- You want dynamic features: AMA, compose-from-anywhere, real-time feed updates without a rebuild step.
+- You want a single binary you `ssh`-deploy, not a CI-deploy-to-CDN pipeline.
+
+**Choose this over Ghost or WordPress when:**
+- You want markdown-in-git as the source of truth, not a database.
+- You don't need plugins, multi-author dashboards, or theme marketplaces.
+
+**Choose a managed service (Bear, Mataroa, Substack) instead when:**
+- You don't want to run a server at all.
+
+**Stay upstream (just use [markgo](https://github.com/1mb-dev/markgo)) when:**
+- You only need the engine; you have your own deploy tooling.
+- Your environment differs significantly from "Debian + Caddy + systemd".
+
 ## Repository layout
 
 ```
