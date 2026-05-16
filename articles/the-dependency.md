@@ -37,5 +37,3 @@ Not nameless.
 Just not organized.
 
 Solo builds all the way down.
-
-\#SoloBuilders #IndieHackers #OpenSource
