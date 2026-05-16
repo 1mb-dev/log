@@ -10,7 +10,7 @@
 #
 # Tunables (env vars or make variables):
 #   MARKGO_REF    Git ref of markgo to clone (only used when MARKGO_SRC is absent).
-#                 Default: v3.8.0.
+#                 Default: v3.9.0.
 #   MARKGO_SRC    Path to a local markgo checkout. If present, builds the currently
 #                 checked-out ref; if absent, MARKGO_REF is cloned to build/markgo-src.
 #                 Default: ../markgo.
@@ -25,11 +25,11 @@
 #   SERVICE_NAME  Systemd unit basename. Default: log (=> log.service).
 #
 # Note: markgo releases ship linux/amd64, darwin/amd64, and windows/amd64
-# binaries as of v3.8.0. This Makefile still builds from source so forkers can
+# binaries as of v3.9.0. This Makefile still builds from source so forkers can
 # pin to any tag or commit and inspect the build line. A curl-based fetch of
 # the published artifacts is a future simplification.
 
-MARKGO_REF   ?= v3.8.0
+MARKGO_REF   ?= v3.9.0
 MARKGO_SRC   ?= ../markgo
 GOOS         ?= linux
 GOARCH       ?= amd64
