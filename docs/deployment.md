@@ -145,7 +145,7 @@ sudo systemctl reload caddy
 
 Caddy auto-provisions TLS via Let's Encrypt on the first request (ACME HTTP-01 challenge on port 80). Expect 10-30 seconds of latency on the very first hit while the cert is issued.
 
-The shipped vhost includes an access-log block writing to `/var/log/caddy/`. If that directory doesn't exist, Caddy's reload will fail — create it (`sudo mkdir -p /var/log/caddy && sudo chown caddy:caddy /var/log/caddy`) or remove the `log { … }` block before reloading.
+The shipped vhost logs access events to stderr, which systemd captures into the journal. Tail with `journalctl -u caddy --grep 'your.domain.example' -f`. Switch to file output (with rotation) if you need long retention — the template includes a commented-out example.
 
 ## 6. Verification
 

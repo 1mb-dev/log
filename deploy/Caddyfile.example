@@ -25,10 +25,13 @@ log.1mb.dev {
 
 	encode gzip zstd
 
+	# Access logs go to systemd journal via stderr. Query with:
+	#   journalctl -u caddy --grep 'log.1mb.dev' -f
+	# Swap to `output file /var/log/caddy/<domain>.access.log { roll_size 10mb }`
+	# if you need rotated files (precondition: /var/log/caddy/ exists and
+	# is writable by the caddy user).
 	log {
-		output file /var/log/caddy/log.1mb.dev.access.log {
-			roll_size 10mb
-			roll_keep 5
-		}
+		output stderr
+		level INFO
 	}
 }
