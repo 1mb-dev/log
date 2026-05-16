@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>1MB 029 — saying no</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #050507;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .canvas {
+    width: 1000px;
+    height: 520px;
+    background: #0e0e10;
+    position: relative;
+    overflow: hidden;
+    color: #d8d8dc;
+  }
+
+  .grain {
+    position: absolute;
+    inset: 0;
+    opacity: 0.035;
+    pointer-events: none;
+    background-image:
+      radial-gradient(circle at 23% 17%, #ffffff 0.5px, transparent 1px),
+      radial-gradient(circle at 78% 82%, #ffffff 0.5px, transparent 1px),
+      radial-gradient(circle at 41% 64%, #ffffff 0.5px, transparent 1px),
+      radial-gradient(circle at 88% 23%, #ffffff 0.5px, transparent 1px),
+      radial-gradient(circle at 12% 91%, #ffffff 0.5px, transparent 1px);
+    background-size: 7px 7px, 11px 11px, 5px 5px, 9px 9px, 13px 13px;
+  }
+
+  .title {
+    position: absolute;
+    top: 56px;
+    left: 60px;
+    right: 60px;
+    text-align: left;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 17px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #909098;
+  }
+
+  .title .accent {
+    color: #7a9e90;
+  }
+
+  .columns {
+    position: absolute;
+    top: 130px;
+    left: 60px;
+    right: 60px;
+    display: grid;
+    grid-template-columns: 1fr 1px 1.6fr;
+    column-gap: 56px;
+  }
+
+  .col-header {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+  }
+
+  .shipped .col-header {
+    color: #7a9e90;
+  }
+
+  .rejected .col-header {
+    color: #707078;
+  }
+
+  .shipped li {
+    list-style: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 21px;
+    font-weight: 500;
+    line-height: 36px;
+    color: #d8d8dc;
+    letter-spacing: -0.005em;
+  }
+
+  .rejected ul {
+    list-style: none;
+  }
+
+  .rejected li {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: 0.005em;
+  }
+
+  .rejected li:nth-child(1)  { color: #d8d8dc; }
+  .rejected li:nth-child(2)  { color: #d1d1d5; }
+  .rejected li:nth-child(3)  { color: #cacace; }
+  .rejected li:nth-child(4)  { color: #c3c3c7; }
+  .rejected li:nth-child(5)  { color: #bcbcc0; }
+  .rejected li:nth-child(6)  { color: #b5b5b9; }
+  .rejected li:nth-child(7)  { color: #aeaeb2; }
+  .rejected li:nth-child(8)  { color: #a7a7ab; }
+  .rejected li:nth-child(9)  { color: #a0a0a4; }
+  .rejected li:nth-child(10) { color: #99999d; }
+  .rejected li:nth-child(11) { color: #929296; }
+  .rejected li:nth-child(12) { color: #8b8b8f; }
+
+  .divider {
+    width: 1px;
+    background: #7a9e90;
+    opacity: 0.18;
+    height: 320px;
+    align-self: start;
+  }
+
+  .footer {
+    position: absolute;
+    bottom: 44px;
+    right: 60px;
+    font-family: 'Inter', sans-serif;
+    font-style: italic;
+    font-size: 13px;
+    color: #707078;
+    letter-spacing: 0.01em;
+  }
+
+  .glyph {
+    position: absolute;
+    bottom: 44px;
+    left: 60px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: #4a4a52;
+  }
+</style>
+</head>
+<body>
+<div class="canvas">
+  <div class="grain"></div>
+
+  <div class="title">
+    the rejected list is the <span class="accent">spine</span>
+  </div>
+
+  <div class="columns">
+    <div class="shipped">
+      <div class="col-header">Shipped</div>
+      <ul>
+        <li>core feature</li>
+        <li>auth</li>
+        <li>export</li>
+        <li>one polish pass</li>
+      </ul>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="rejected">
+      <div class="col-header">Rejected</div>
+      <ul>
+        <li>dark mode</li>
+        <li>Slack bot</li>
+        <li>mobile app</li>
+        <li>AI integrations</li>
+        <li>team accounts</li>
+        <li>public API</li>
+        <li>Zapier</li>
+        <li>paid tier</li>
+        <li>dashboard redesign</li>
+        <li>admin panel</li>
+        <li>SSO</li>
+        <li>csv import</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="glyph">1mb · 029</div>
+  <div class="footer">that list is most of the actual work</div>
+</div>
+</body>
+</html>

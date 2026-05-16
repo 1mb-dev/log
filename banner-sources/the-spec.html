@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  .canvas {
+    width: 1000px;
+    height: 560px;
+    background: #0d1117;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* Subtle grain */
+  .canvas::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Editor chrome - tab bar */
+  .tab-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 38px;
+    background: #161b22;
+    border-bottom: 1px solid #21262d;
+    display: flex;
+    align-items: center;
+    padding-left: 16px;
+    z-index: 3;
+  }
+
+  .tab {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 400;
+    color: #c9d1d9;
+    background: #0d1117;
+    padding: 8px 16px;
+    border-top: 2px solid #58a6ff;
+    border-right: 1px solid #21262d;
+    border-left: 1px solid #21262d;
+    position: relative;
+    top: 1px;
+  }
+
+  .tab-inactive {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 400;
+    color: #484f58;
+    padding: 8px 16px;
+    position: relative;
+    top: 1px;
+  }
+
+  /* Line numbers + content area */
+  .editor {
+    position: absolute;
+    top: 38px;
+    left: 0;
+    right: 0;
+    bottom: 48px;
+    z-index: 3;
+    display: flex;
+    padding-top: 24px;
+  }
+
+  .gutter {
+    width: 64px;
+    text-align: right;
+    padding-right: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    line-height: 1.9;
+    color: #484f58;
+    user-select: none;
+    flex-shrink: 0;
+  }
+
+  .code {
+    flex: 1;
+    padding-left: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    line-height: 1.9;
+    color: #c9d1d9;
+  }
+
+  .code .heading {
+    color: #58a6ff;
+  }
+
+  .code .bullet {
+    color: #58a6ff;
+  }
+
+  .code .struck {
+    color: #484f58;
+    text-decoration: line-through;
+  }
+
+  .code .question {
+    color: #d29922;
+  }
+
+  .code .comment {
+    color: #484f58;
+    font-style: italic;
+  }
+
+  .code .star {
+    color: #d29922;
+  }
+
+  .code .dim {
+    color: #484f58;
+  }
+
+  /* Status bar */
+  .status-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 48px;
+    background: #161b22;
+    border-top: 1px solid #21262d;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 3;
+  }
+
+  .status-left {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: #484f58;
+    display: flex;
+    gap: 20px;
+  }
+
+  .status-right {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: #484f58;
+  }
+
+  .status-left .modified {
+    color: #d29922;
+  }
+</style>
+</head>
+<body>
+<div class="canvas">
+
+  <!-- Tab bar -->
+  <div class="tab-bar">
+    <div class="tab">spec.md</div>
+    <div class="tab-inactive">backlog.md</div>
+  </div>
+
+  <!-- Editor content -->
+  <div class="editor">
+    <div class="gutter">
+      1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13
+    </div>
+    <div class="code">
+      <span class="heading"># the thing</span><br>
+      <br>
+      <span class="bullet">-</span> auth flow<br>
+      <span class="bullet">-</span> <span class="struck">onboarding wizard</span><br>
+      <span class="bullet">-</span> export to csv <span class="question">?</span><br>
+      <span class="bullet">-</span> <span class="star">***</span> make it not ugly<br>
+      <span class="bullet">-</span> rate limiting <span class="dim">(v2)</span><br>
+      <br>
+      <span class="comment">&lt;!-- this started as one feature --&gt;</span><br>
+      <br>
+      <span class="bullet">-</span> <span class="struck">billing page</span> <span class="dim">moved to backlog.md</span><br>
+      <span class="bullet">-</span> error messages that don't lie<br>
+      <span class="comment">&lt;!-- PM says ship it. PM is also me --&gt;</span><br>
+      <span class="bullet">-</span> <span class="struck">dark mode</span> <span class="dim">nobody asked for this. you asked for this.</span><br>
+    </div>
+  </div>
+
+  <!-- Status bar -->
+  <div class="status-bar">
+    <div class="status-left">
+      <span>spec.md</span>
+      <span class="modified">modified</span>
+      <span>last saved 2:14 AM</span>
+    </div>
+    <div class="status-right">Ln 15, Col 1</div>
+  </div>
+
+</div>
+</body>
+</html>

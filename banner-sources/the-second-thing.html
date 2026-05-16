@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>027 - The Second Thing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+
+  .canvas {
+    width: 1000px;
+    height: 440px;
+    background: #0e0e10;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .canvas::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .split {
+    position: absolute;
+    top: 54px;
+    bottom: 132px;
+    left: 72px;
+    right: 72px;
+    z-index: 2;
+    display: flex;
+  }
+
+  .col {
+    flex: 1;
+    padding-right: 40px;
+    position: relative;
+  }
+
+  .col.right {
+    padding-right: 0;
+    padding-left: 48px;
+  }
+
+  .rule {
+    position: absolute;
+    left: 50%;
+    top: 10px;
+    bottom: 10px;
+    width: 1px;
+    background: #7a9e7e;
+    opacity: 0.55;
+    z-index: 2;
+  }
+
+  .numeral {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 72px;
+    font-weight: 400;
+    line-height: 1;
+    color: #d0d0d4;
+    letter-spacing: -0.02em;
+    margin-bottom: 26px;
+  }
+
+  .numeral .dot {
+    color: #7a9e7e;
+  }
+
+  .primary {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: #d0d0d4;
+    line-height: 1.4;
+    letter-spacing: -0.005em;
+  }
+
+  .items {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: #909098;
+    line-height: 1.85;
+    letter-spacing: 0.01em;
+  }
+
+  .items .count {
+    color: #a8a8b0;
+    font-weight: 500;
+    margin-left: 2px;
+  }
+
+  .label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.26em;
+    color: #7a7a82;
+    text-transform: uppercase;
+  }
+
+  .col.right .label {
+    left: 48px;
+  }
+
+  .label .accent {
+    color: #7a9e7e;
+  }
+
+  .landing {
+    position: absolute;
+    left: 72px;
+    right: 72px;
+    bottom: 56px;
+    z-index: 2;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+
+  .landing .line {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 32px;
+    font-weight: 500;
+    color: #dcdce0;
+    letter-spacing: -0.015em;
+  }
+
+  .landing .tag {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    color: #4a4a52;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+  <div class="canvas">
+    <div class="split">
+      <div class="col">
+        <div class="numeral">01<span class="dot">.</span></div>
+        <div class="primary">blank page</div>
+        <div class="label">greenfield</div>
+      </div>
+
+      <div class="rule"></div>
+
+      <div class="col right">
+        <div class="numeral">02<span class="dot">.</span></div>
+        <div class="items">
+          bug #23<br>
+          dependabot &middot; <span class="count">4 PRs</span><br>
+          user email<br>
+          feature request
+        </div>
+        <div class="label">greenfield <span class="accent">+ rent</span></div>
+      </div>
+    </div>
+
+    <div class="landing">
+      <div class="line">Paying it is the work.</div>
+      <div class="tag">THE SECOND THING</div>
+    </div>
+  </div>
+</body>
+</html>

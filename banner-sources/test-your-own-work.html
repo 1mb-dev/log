@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>026 - Test Your Own Work</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+
+  .canvas {
+    width: 1000px;
+    height: 440px;
+    background: #0e0e10;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .canvas::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .content {
+    position: absolute;
+    inset: 0;
+    padding: 72px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .beat {
+    font-family: 'Inter', sans-serif;
+    font-size: 19px;
+    font-weight: 400;
+    line-height: 1.75;
+    color: #8a8a92;
+    letter-spacing: 0.005em;
+    margin-bottom: 42px;
+  }
+
+  .beat .unity {
+    color: #b4b4bc;
+    font-weight: 500;
+  }
+
+  .payoff {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 36px;
+    font-weight: 500;
+    line-height: 1.24;
+    color: #dcdce0;
+    letter-spacing: -0.015em;
+  }
+
+  .payoff .accent {
+    color: #7a9e7e;
+  }
+
+  .footer {
+    position: absolute;
+    bottom: 24px;
+    right: 72px;
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.34em;
+    color: #4a4a52;
+    text-transform: uppercase;
+    z-index: 2;
+  }
+</style>
+</head>
+<body>
+  <div class="canvas">
+    <div class="content">
+      <div class="beat">
+        Writing the feature is optimism.<br>
+        Breaking it is pessimism.<br>
+        <span class="unity">Both have to live in the same head.</span>
+      </div>
+
+      <div class="payoff">
+        They're the ones who break<br>
+        their own things <span class="accent">first.</span>
+      </div>
+    </div>
+    <div class="footer">BE YOUR OWN ADVERSARY</div>
+  </div>
+</body>
+</html>
