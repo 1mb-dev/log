@@ -115,6 +115,12 @@ process_entry() {
     [[ "$date" =~ $DATE_PATTERN ]] || fail "$slug" "date not RFC3339: $date"
     [[ "$draft" == "false" ]]      || fail "$slug" "draft must be false (got: $draft)"
 
+    # Body must not begin with a markdown H1 -- markgo renders the title from
+    # frontmatter; a body H1 would duplicate it.
+    local body_first
+    body_first=$(awk '/^---$/{c++; next} c==2 && /^[^[:space:]]/{print; exit}' "$md_file")
+    [[ "$body_first" =~ ^"# " ]] && fail "$slug" "body begins with '# ' heading (would duplicate title)"
+
     local first_cat
     first_cat=$(get_first_list_item "$fm" "categories")
     [[ -n "$first_cat" ]] || fail "$slug" "missing required frontmatter: categories"
