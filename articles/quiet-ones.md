@@ -1,7 +1,7 @@
 ---
 title: Quiet Ones
 description: The loudest builders have the most followers.
-date: "2026-01-01T10:00:00Z"
+date: "2026-02-27T10:00:00Z"
 tags:
   - observations
   - builders

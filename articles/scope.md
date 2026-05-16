@@ -1,7 +1,7 @@
 ---
 title: Scope
 description: Scope creep isn't a project management problem.
-date: "2026-01-01T10:00:00Z"
+date: "2026-02-18T10:00:00Z"
 tags:
   - observations
   - discipline

@@ -1,7 +1,7 @@
 ---
 title: The Others
 description: Some build with teams, titles, and backing.
-date: "2026-01-01T10:00:00Z"
+date: "2026-03-20T10:00:00Z"
 tags:
   - contrasts
   - community

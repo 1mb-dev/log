@@ -1,7 +1,7 @@
 ---
 title: Not A Brand
 description: 1mb doesn't sell anything.
-date: "2026-01-01T10:00:00Z"
+date: "2026-03-27T10:00:00Z"
 tags:
   - philosophy
   - identity

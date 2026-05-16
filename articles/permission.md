@@ -1,7 +1,7 @@
 ---
 title: Permission
 description: Waiting for approval is comfortable.
-date: "2026-01-01T10:00:00Z"
+date: "2026-02-16T10:00:00Z"
 tags:
   - observations
   - shipping

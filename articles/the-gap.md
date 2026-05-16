@@ -1,7 +1,7 @@
 ---
 title: The Gap
 description: Career gaps get explained.
-date: "2026-01-01T10:00:00Z"
+date: "2026-03-07T10:00:00Z"
 tags:
   - mindset
   - career
