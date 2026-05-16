@@ -13,7 +13,7 @@ Prerequisites: a Linux VPS you can `ssh` to, a domain whose A record points at i
 git clone https://github.com/yourname/your-blog.git && cd your-blog
 
 # Build the markgo binary for your server
-make fetch-markgo MARKGO_REF=v3.9.0 GOOS=linux GOARCH=amd64
+make fetch-markgo MARKGO_REF=v3.10.1 GOOS=linux GOARCH=amd64
 
 # Customise
 cp .env.example .env                  # edit BASE_URL, BLOG_*, ADMIN_*, CORS
@@ -76,7 +76,7 @@ log/
 
 ## Configuration
 
-`.env.example` is grounded against markgo v3.9.0; every knob is annotated. Copy to `.env`, edit, then secure on the deploy target with `chmod 600 .env`.
+`.env.example` is grounded against markgo v3.10.1; every knob is annotated. Copy to `.env`, edit, then secure on the deploy target with `chmod 600 .env`.
 
 A few choices baked into the reference deployment, none of them required:
 
@@ -103,4 +103,4 @@ Content under `articles/` is the author's, all rights reserved -- see [`LICENSE-
 
 ## Status
 
-Live at [log.1mb.dev](https://log.1mb.dev) running pinned markgo `v3.9.0`. The deploy harness (`make deploy`, `scripts/verify-deploy.sh`, [`docs/deployment.md`](docs/deployment.md)) is what forkers copy; the corpus under `articles/` is the maintainer's.
+Live at [log.1mb.dev](https://log.1mb.dev) running pinned markgo `v3.10.1`. The deploy harness (`make deploy`, `scripts/verify-deploy.sh`, [`docs/deployment.md`](docs/deployment.md)) is what forkers copy; the corpus under `articles/` is the maintainer's.
