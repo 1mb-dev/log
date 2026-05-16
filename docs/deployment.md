@@ -45,7 +45,7 @@ The reference deploy uses `log.1mb.dev` (one A record to a single DigitalOcean d
 ## 3. Build the markgo binary
 
 ```sh
-make fetch-markgo MARKGO_REF=v3.8.0 GOOS=linux GOARCH=amd64
+make fetch-markgo MARKGO_REF=v3.9.0 GOOS=linux GOARCH=amd64
 ```
 
 This produces `build/markgo` — a static Linux binary with no runtime dependencies.
