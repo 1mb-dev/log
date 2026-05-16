@@ -6,7 +6,7 @@ The published content under `articles/` is the maintainer's writing. The deploy 
 
 ## Quick deploy
 
-Prerequisites: a Linux VPS you can `ssh` to, a domain with DNS edit access, Go 1.26+ and `make` locally, Caddy v2 on the VPS.
+Prerequisites: a Linux VPS you can `ssh` to, a domain whose A record points at it (required before first deploy for Let's Encrypt's HTTP-01 challenge), Go 1.26+ and `make` locally, Caddy v2 on the VPS.
 
 ```sh
 # Fork on GitHub, then clone your fork
@@ -19,9 +19,12 @@ make fetch-markgo MARKGO_REF=v3.8.0 GOOS=linux GOARCH=amd64
 cp .env.example .env                  # edit BASE_URL, BLOG_*, ADMIN_*, CORS
 rm articles/_example.md               # replace with your own writing
 $EDITOR static/                       # swap or remove the overrides
+
+# Deploy (after .env is populated and DNS resolves to the VPS)
+make deploy DOMAIN=your.domain.example
 ```
 
-Then follow [`docs/deployment.md`](docs/deployment.md) for the rest -- DNS, systemd, Caddy. Once `.env` is populated, `make deploy DOMAIN=your.domain.example` pushes binary + content + `.env`, installs the systemd unit with templated user/paths, restarts the service, and runs `scripts/verify-deploy.sh` to confirm health.
+`make deploy` pushes binary + content + `.env`, installs the systemd unit with templated user/paths, restarts the service, and runs `scripts/verify-deploy.sh` to confirm health. See [`docs/deployment.md`](docs/deployment.md) for the manual sequence, DNS setup, and systemd/Caddy details.
 
 ## What you get
 
