@@ -11,6 +11,7 @@ tags:
 categories:
   - Thoughts
 draft: false
+type: thought
 ---
 
 keep building

@@ -8,6 +8,7 @@ tags:
 categories:
   - Thoughts
 draft: false
+type: thought
 ---
 
 "What's your title?"

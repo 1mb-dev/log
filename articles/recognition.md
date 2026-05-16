@@ -8,6 +8,7 @@ tags:
 categories:
   - Thoughts
 draft: false
+type: thought
 ---
 
 To the ones building during nap time.

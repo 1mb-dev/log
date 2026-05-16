@@ -8,6 +8,7 @@ tags:
 categories:
   - Thoughts
 draft: false
+type: thought
 ---
 
 Scope creep isn't a project management problem.

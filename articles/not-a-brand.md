@@ -8,6 +8,7 @@ tags:
 categories:
   - Thoughts
 draft: false
+type: thought
 ---
 
 1mb doesn't sell anything.

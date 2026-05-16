@@ -8,6 +8,7 @@ tags:
 categories:
   - Thoughts
 draft: false
+type: thought
 ---
 
 The loudest builders have the most followers.

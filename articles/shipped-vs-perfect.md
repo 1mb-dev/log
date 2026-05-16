@@ -9,6 +9,7 @@ tags:
 categories:
   - Thoughts
 draft: false
+type: thought
 ---
 
 The best version is still in your head.

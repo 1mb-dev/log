@@ -18,6 +18,7 @@ tags:
 categories:
   - Thoughts
 draft: false
+type: thought
 ---
 
 90% of solo building:
