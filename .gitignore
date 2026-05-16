@@ -26,5 +26,8 @@ logs/
 # Markgo runtime artifacts (created on the deploy target, not in the repo)
 uploads/
 
+# Inbox staging for incoming articles before promotion to articles/
+inbox/
+
 # Playwright MCP session artifacts (snapshots, console logs, screenshots)
 .playwright-mcp/
