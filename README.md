@@ -21,7 +21,7 @@ rm articles/_example.md               # replace with your own writing
 $EDITOR static/                       # swap or remove the overrides
 ```
 
-Then follow [`docs/deployment.md`](docs/deployment.md) for the rest -- DNS, `scp`, systemd, Caddy. `make deploy DOMAIN=...` is currently a stub; a near-term milestone wires it up against the reference deployment.
+Then follow [`docs/deployment.md`](docs/deployment.md) for the rest -- DNS, systemd, Caddy. Once `.env` is populated, `make deploy DOMAIN=your.domain.example` pushes binary + content + `.env`, installs the systemd unit with templated user/paths, restarts the service, and runs `scripts/verify-deploy.sh` to confirm health.
 
 ## What you get
 
@@ -81,4 +81,4 @@ Content under `articles/` is the author's, all rights reserved -- see [`LICENSE-
 
 ## Status
 
-Scaffold landed; first live deploy at `log.1mb.dev` pending.
+Live at [log.1mb.dev](https://log.1mb.dev) running pinned markgo `v3.7.0-7-gc3a0643`. The deploy harness (`make deploy`, `scripts/verify-deploy.sh`, [`docs/deployment.md`](docs/deployment.md)) is what forkers copy; the corpus under `articles/` is the maintainer's.
