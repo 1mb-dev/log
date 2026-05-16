@@ -27,7 +27,7 @@
 # Note: markgo's GitHub releases are tag-only (no binary artifacts attached as of
 # v3.7.0). Once artifacts ship, this Makefile can switch to a curl-based fetch.
 
-MARKGO_REF   ?= v3.7.0
+MARKGO_REF   ?= v3.8.0
 MARKGO_SRC   ?= ../markgo
 GOOS         ?= linux
 GOARCH       ?= amd64
