@@ -7,6 +7,7 @@ Deploy and configuration changes for this deployment of markgo. Format based on 
 ### Deployed
 
 - 2026-05-15 — reference deployment live at `log.1mb.dev`. Pinned markgo `v3.7.0-7-gc3a0643` running as `loguser` on a shared Debian 13 VPS, fronted by Caddy with auto-TLS via Let's Encrypt.
+- 2026-05-16 — upgraded to markgo `v3.8.0` (security + HEAD parity release). Re-probed admin JSON paths: `/admin/drafts`, `/admin/stats`, `/admin/ama` all return `401` (previously leaked content). HEAD parity verified against `/`, `/feed.xml`, `/robots.txt`, `/sitemap.xml`.
 
 ### Added
 
@@ -19,15 +20,18 @@ Deploy and configuration changes for this deployment of markgo. Format based on 
 
 - `.env.example`: default `STATIC_PATH=` (empty) instead of `./static`. Markgo's static handler is exclusive, not overlay — setting `STATIC_PATH=./static` without populating the directory 404s every asset. Trap for forkers.
 
+### Fixed upstream (markgo v3.8.0)
+
+- [`1mb-dev/markgo#42`](https://github.com/1mb-dev/markgo/issues/42) — admin JSON endpoints no longer bypass `SoftSessionAuth`. Verified against this deploy.
+- [`1mb-dev/markgo#43`](https://github.com/1mb-dev/markgo/issues/43) — `HEAD` requests now mirror GET status codes. Verified against this deploy.
+
 ### Known issues (upstream, tracked)
 
-- [`1mb-dev/markgo#42`](https://github.com/1mb-dev/markgo/issues/42) — admin JSON endpoints bypass `SoftSessionAuth` and leak drafts/stats/AMA pending list. Set `ADMIN_USERNAME`/`ADMIN_PASSWORD` to enable admin routes, then treat the JSON path as unauthenticated until upstream patches. Stopgap: block `Accept: application/json` on `/admin/*` at the reverse proxy.
-- [`1mb-dev/markgo#43`](https://github.com/1mb-dev/markgo/issues/43) — `HEAD` requests return 404 on all GET-only routes. Configure uptime monitors to use GET, not HEAD.
-- [`1mb-dev/markgo#44`](https://github.com/1mb-dev/markgo/issues/44) — AMA submission filename uses `thought-` prefix instead of `ama-`. Cosmetic; moderation and rendering unaffected.
+- [`1mb-dev/markgo#44`](https://github.com/1mb-dev/markgo/issues/44) — AMA submission filename uses `thought-` prefix instead of `ama-`. Cosmetic; moderation and rendering unaffected. Fix shipped in v3.8.0; pending live re-verification on next AMA submission.
 
 ### Notes
 
-- markgo target version: `v3.7.0` (first release with the AMA content type).
+- markgo target version: `v3.8.0` (security hardening + HEAD parity over the v3.7.0 AMA-content-type baseline).
 - Reference deployment binds markgo to `127.0.0.1:3001` (configured via `PORT` in `.env`) to coexist with other services on the same host.
 - AMA spam protection is **math captcha + honeypot + `RATE_LIMIT_CONTACT_*`** (not CSRF, contrary to early documentation).
 - RAM is tight on small VPSes (the reference deploy has 464 MiB total; markgo resident ~13-15 MiB). Drop `CACHE_MAX_SIZE` in `.env` if pressure surfaces.
