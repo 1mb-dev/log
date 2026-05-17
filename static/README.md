@@ -6,7 +6,7 @@ Set `STATIC_PATH=./static` in `.env` once this directory has at least one overri
 
 ## What ships with the reference deployment
 
-The `1.` favicon, `1.log` OG card, `1mb` theme CSS, and Space Mono woff2 in this directory are the maintainer's brand chrome — example overrides at the exact paths markgo's HTML references. Replace with your own when forking.
+The `1.` favicon and header brand-logo, `1.log` OG card, `1mb` theme CSS, and Space Mono woff2 in this directory are the maintainer's brand chrome — example overrides at the exact paths markgo's HTML references. Replace with your own when forking.
 
 ```
 static/
@@ -20,6 +20,8 @@ static/
 │   ├── favicon.svg                     SVG favicon for modern browsers.
 │   ├── favicon-32x32.png               PNG favicon (markgo's emitted path).
 │   ├── apple-touch-icon.png            180×180 iOS home-screen icon.
+│   ├── brand-logo.svg                  Header brand-logo (markgo v3.12.0+).
+│   │                                   Inlined; uses var(--color-*) for theme.
 │   └── banners/                        Per-article hero PNGs (markgo banner: frontmatter).
 └── og-default.png                      1200×630 default social card.
                                         Referenced by SEO_DEFAULT_IMAGE in .env.
@@ -28,6 +30,7 @@ static/
 ## Forking checklist
 
 - Drop your own `favicon.svg` / `favicon-32x32.png` / `apple-touch-icon.png` into `img/`.
+- Drop a `brand-logo.svg` into `img/` to swap the header logo (markgo v3.12.0+ inlines it; use `var(--color-primary)` / `var(--color-bg-primary)` / `var(--color-text-primary)` for fills if you want theme-reactive colors). Skip the file to keep markgo's default.
 - Replace `og-default.png` (1200×630) with your social card.
 - Edit `themes/1mb.css` to recolor / re-font, or rename to `themes/yourname.css` and set `BLOG_STYLE=yourname` in `.env`. Delete the file (and leave `BLOG_STYLE=minimal`) to fall back to markgo's stock minimal theme.
 - Replace or remove the Space Mono woff2 + `fonts.css` if you prefer markgo's default Inter + Fira Code.

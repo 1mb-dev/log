@@ -1,0 +1,8 @@
+<svg class="brand-logo" width="28" height="28" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <rect width="32" height="32" fill="var(--color-bg-primary)"/>
+  <text x="16" y="22"
+        font-family="'Space Mono', 'Monaco', 'Menlo', 'Consolas', ui-monospace, monospace"
+        font-weight="700" font-size="20"
+        fill="var(--color-text-primary)"
+        text-anchor="middle">1.</text>
+</svg>
