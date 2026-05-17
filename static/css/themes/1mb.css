@@ -2,10 +2,10 @@
    1mb theme — log.1mb.dev
    Space Mono monospace, dark by default, muted-blue accent.
 
-   Overrides markgo's embedded themes/minimal.css via STATIC_PATH overlay.
-   Markgo's BLOG_STYLE validation currently accepts only "minimal", so the
-   theme rides on that name. Forkers: replace tokens with your palette, or
-   restore markgo's defaults by deleting this file.
+   Activated via BLOG_STYLE=1mb (markgo v3.10.3+ accepts any non-empty value).
+   Served at /static/css/themes/1mb.css through STATIC_PATH overlay.
+   Forkers: replace tokens with your palette, or rename to themes/<yourname>.css
+   and set BLOG_STYLE=<yourname>.
 
    Selector mirrors markgo's main.css pattern: :root:not([data-theme="light"])
    matches the default + system-dark + user-toggled-dark cases.
