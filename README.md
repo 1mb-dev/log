@@ -41,7 +41,7 @@ Full feature surface lives in [markgo's docs](https://github.com/1mb-dev/markgo/
 
 ## When to use this
 
-Fork this when you want a self-hosted, markdown-in-git blog with a small operational footprint — single Go binary, one systemd unit, Caddy in front for TLS. Comfortable on a small VPS (markgo is ~15 MiB resident).
+Fork this when you want a self-hosted, markdown-in-git blog with a small operational footprint — single Go binary, one systemd unit, Caddy in front for TLS. Comfortable on a small VPS (markgo is ~15 MiB resident). For the same orientation in fewer words, see [Run your own?](https://log.1mb.dev/p/run-your-own).
 
 Not for you if a static-site generator is enough (no dynamic features needed), if you want plugins / themes / multi-author dashboards (use Ghost or WordPress), if you don't want to run a server at all (use Bear, Mataroa, Substack), or if you have your own deploy tooling around the engine (use [markgo](https://github.com/1mb-dev/markgo) directly).
 
