@@ -7,10 +7,10 @@ Deploy and configuration changes for this deployment of markgo. Format based on 
 ### Deployed
 
 - 2026-05-15 — reference deployment live at `log.1mb.dev`. Pinned markgo `v3.7.0-7-gc3a0643` running as `loguser` on a shared Debian 13 VPS, fronted by Caddy with auto-TLS via Let's Encrypt.
-- 2026-05-16 — upgraded to markgo `v3.8.0` (security + HEAD parity release). Re-probed admin JSON paths: `/admin/drafts`, `/admin/stats`, `/admin/ama` all return `401` (previously leaked content). HEAD parity verified against `/`, `/feed.xml`, `/robots.txt`, `/sitemap.xml`.
-- 2026-05-16 (later) — upgraded to markgo `v3.9.0` (engine-name personalization). Verified `<meta name="application-name">` = `1mb` and `<meta name="markgo-storage-namespace">` = `markgo:log-1mb-dev` rendered live. Install banner JS now reads blog title from the meta tag; client storage namespaced per blog with auto-migration of v3.8 keys.
-- 2026-05-17 — upgraded to markgo `v3.10.1` (banner feature + theme contrast). Verified `v3.10.1` clean tag live (replaced the prior `v3.10.0-3-g999a5fb-dirty` WIP build that briefly served wave 1). Banner support, server-absolute banner paths, and color-preset dark-mode AA contrast all available; wave 2 banner content lands next.
-- 2026-05-17 (later) — wave 2 deployed (7 banner essays). Banner PNGs initially 404'd because `STATIC_PATH` is empty (embedded `/static` only) — markgo's exclusive static-path semantics mean source-controlled assets need either a full mirror or a proxy overlay. Added a Caddy `handle /static/img/banners/*` block to overlay just the banners path from the deploy tree; embedded `/static/*` still served by markgo. Filed [`1mb-dev/markgo#59`](https://github.com/1mb-dev/markgo/issues/59) upstream for proper `STATIC_PATH` overlay mode; remove the Caddy block when it lands.
+- 2026-05-16 — `v3.8.0` shipped. Admin JSON paths (`/admin/drafts`, `/admin/stats`, `/admin/ama`) return `401`; HEAD parity verified against `/`, `/feed.xml`, `/robots.txt`, `/sitemap.xml`.
+- 2026-05-16 (later) — `v3.9.0` shipped. `<meta name="application-name">` = `1mb` and `<meta name="markgo-storage-namespace">` = `markgo:log-1mb-dev` verified live; client storage namespaced per blog with auto-migration of v3.8 keys.
+- 2026-05-17 — `v3.10.1` shipped. Banner support, server-absolute banner paths, and color-preset dark-mode AA contrast available.
+- 2026-05-17 (later) — banner essays imported. Added Caddy `handle /static/img/banners/*` block to overlay the banners path from the deploy tree; embedded `/static/*` continues to serve from markgo. Filed [`1mb-dev/markgo#59`](https://github.com/1mb-dev/markgo/issues/59) for `STATIC_PATH` overlay mode upstream; remove the Caddy block when it lands.
 
 ### Added
 
@@ -18,10 +18,11 @@ Deploy and configuration changes for this deployment of markgo. Format based on 
 - `scripts/verify-deploy.sh` — smoke-test runner (health, feed, sitemap, robots, manifest, HSTS). Uses GET (not HEAD) so it doesn't hide markgo's HEAD-routing quirk.
 - `make deploy` — idempotent push of binary + content + .env, systemd unit install with templated `User`/paths/`SyslogIdentifier`, restart, then verify.
 - `make verify` — standalone smoke-test against `DOMAIN`.
+- Demo-corpus stance excludes meta-artifacts: `banner-sources/` removed; HTML mockups live in author repo.
 
 ### Fixed
 
-- `.env.example`: default `STATIC_PATH=` (empty) instead of `./static`. Markgo's static handler is exclusive, not overlay — setting `STATIC_PATH=./static` without populating the directory 404s every asset. Trap for forkers.
+- `.env.example`: default `STATIC_PATH=` (empty) instead of `./static`. Markgo's static handler is exclusive, not overlay — setting `STATIC_PATH=./static` without populating the directory 404s every asset.
 
 ### Fixed upstream (markgo v3.8.0)
 
