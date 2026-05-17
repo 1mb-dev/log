@@ -45,7 +45,7 @@ The reference deploy uses `log.1mb.dev` (one A record to a single DigitalOcean d
 ## 3. Build the markgo binary
 
 ```sh
-make fetch-markgo MARKGO_REF=v3.10.1 GOOS=linux GOARCH=amd64
+make fetch-markgo MARKGO_REF=v3.10.2 GOOS=linux GOARCH=amd64
 ```
 
 This produces `build/markgo` — a static Linux binary with no runtime dependencies.
@@ -71,7 +71,7 @@ Required edits:
 
 Leave these as-is unless you have a reason:
 
-- `STATIC_PATH=` (empty) — markgo's static handler is **exclusive**, not overlay. Setting `STATIC_PATH=./static` makes markgo serve from `./static` and bypass its embedded defaults entirely; missing files 404. Leave empty until you've populated `./static/` with overrides.
+- `STATIC_PATH=` (empty) — markgo's static handler is **overlay mode** (since v3.10.2): setting `STATIC_PATH=./static` serves your override files first, falls back to markgo's embedded defaults for everything else. No mirror needed. Leave empty if you have no overrides; set to `./static` once you drop favicons, OG images, fonts, or theme CSS into `./static/`.
 - `EMAIL_HOST=` (empty) — disables the contact form. AMA doesn't use SMTP; submissions land in markgo's moderation queue on disk.
 
 Now deploy:
@@ -178,7 +178,7 @@ If you forked this repo to deploy your own blog:
 
 - [ ] Replace `articles/_example.md` with your own writing.
 - [ ] Edit `.env`: `BASE_URL`, `BLOG_*`, `ABOUT_*`, `ADMIN_*`, `CORS_ALLOWED_ORIGINS`.
-- [ ] Decide on `STATIC_PATH`: leave empty to use markgo's embedded defaults (recommended for first deploy), or populate `./static/` with a full mirror of markgo's `web/static/` tree before setting `STATIC_PATH=./static`.
+- [ ] Decide on `STATIC_PATH`: leave empty if you have no static overrides; set to `./static` once you drop favicons, OG image, fonts, or theme CSS into `./static/`. Overlay mode falls back to markgo's embedded defaults for everything you didn't replace.
 - [ ] Edit `deploy/log.service.example` if you want to ship `User=` other than `markgo` directly (or just override `DEPLOY_USER` on the `make deploy` command line).
 - [ ] Edit `deploy/Caddyfile.example` with your domain.
 - [ ] Add `static/og-default.png` (1200×630 PNG) for default social cards.
@@ -193,7 +193,7 @@ If you forked this repo to deploy your own blog:
 
 **TLS not provisioning.** Caddy needs ports 80 and 443 reachable from the public internet. Check firewall (`sudo ufw status` or your cloud firewall console). Watch `journalctl -u caddy -f` while curling your domain to see the ACME flow.
 
-**Static assets all 404.** You set `STATIC_PATH=./static` but `./static/` is empty or doesn't contain markgo's embedded asset tree. Markgo's static handler is exclusive: if the directory exists, embedded defaults are bypassed *entirely*. Either populate `./static/` with a full mirror of markgo's `web/static/`, or set `STATIC_PATH=` (empty) and let embedded defaults serve.
+**Static asset overrides not appearing.** Overlay mode falls back to embedded for any path you didn't replace; if your override doesn't show, confirm the file is present in `./static/` at the exact path markgo's HTML references (`/static/img/favicon.svg` → `./static/img/favicon.svg`). Pre-v3.10.2 the handler was exclusive; if you're on an older binary, either bump or leave `STATIC_PATH=` empty.
 
 **Uptime monitor reports the site as down.** Many monitors probe with HEAD by default. Markgo currently returns 404 for HEAD on every registered route — switch the probe method to GET. (Tracked as an upstream fix in `1mb-dev/markgo`.)
 

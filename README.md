@@ -13,7 +13,7 @@ Prerequisites: a Linux VPS you can `ssh` to, a domain whose A record points at i
 git clone https://github.com/yourname/your-blog.git && cd your-blog
 
 # Build the markgo binary for your server
-make fetch-markgo MARKGO_REF=v3.10.1 GOOS=linux GOARCH=amd64
+make fetch-markgo MARKGO_REF=v3.10.2 GOOS=linux GOARCH=amd64
 
 # Customise
 cp .env.example .env                  # edit BASE_URL, BLOG_*, ADMIN_*, CORS
@@ -63,7 +63,7 @@ log/
 
 ## Configuration
 
-`.env.example` is annotated and grounded against markgo v3.10.1. See [`docs/deployment.md`](docs/deployment.md) §4 for the required edits, and §5 for the Caddy / systemd install paths.
+`.env.example` is annotated and grounded against markgo v3.10.2. See [`docs/deployment.md`](docs/deployment.md) §4 for the required edits, and §5 for the Caddy / systemd install paths.
 
 ## Customising
 
@@ -77,4 +77,4 @@ Repo structure (templates, deploy configs, Makefile, docs) is MIT — see [`LICE
 
 ## Status
 
-Live at [log.1mb.dev](https://log.1mb.dev) running pinned markgo `v3.10.1`. The deploy harness (`make deploy`, `scripts/verify-deploy.sh`, [`docs/deployment.md`](docs/deployment.md)) is what forkers copy; the corpus under `articles/` is the maintainer's.
+Live at [log.1mb.dev](https://log.1mb.dev) running pinned markgo `v3.10.2`. The deploy harness (`make deploy`, `scripts/verify-deploy.sh`, [`docs/deployment.md`](docs/deployment.md)) is what forkers copy; the corpus under `articles/` is the maintainer's.
