@@ -1,6 +1,6 @@
 /* Self-hosted fonts — log.1mb.dev override of markgo's fonts.css.
    Space Mono replaces Inter + Fira Code; --theme-font-sans and
-   --theme-font-mono both point to Space Mono in themes/1mb.css.
+   --theme-font-mono both point to Space Mono in themes/minimal.css.
    Monaco at the head of the system stack covers macOS clients
    without a self-hosted fetch. */
 

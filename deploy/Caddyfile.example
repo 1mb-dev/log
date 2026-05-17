@@ -8,21 +8,12 @@
 # Replace `log.1mb.dev` with your domain before deploying.
 
 log.1mb.dev {
-	# Source-controlled banner images (per-article hero PNGs under static/img/banners/).
-	# Markgo's STATIC_PATH is exclusive — setting it would replace embedded assets
-	# wholesale and force forkers to mirror markgo's entire static surface. Instead,
-	# Caddy overlays only the banners path from the deploy tree; markgo continues to
-	# serve everything else from its embedded /static. Remove this block once markgo
-	# supports STATIC_PATH overlay mode (tracked upstream:
-	# https://github.com/1mb-dev/markgo/issues/59).
-	handle /static/img/banners/* {
-		root * /opt/log.1mb.dev
-		file_server
-	}
-
-	# Markgo binds to localhost. Caddy fronts it for TLS, compression, and access logging.
-	# The port must match PORT in .env. This reference deployment uses 3001 to coexist
-	# with other services on the same host.
+	# Markgo binds to localhost. Caddy fronts it for TLS, compression, and access
+	# logging. The port must match PORT in .env. This reference deployment uses 3001
+	# to coexist with other services on the same host. Source-controlled static
+	# assets (banners, favicons, og-default, theme CSS, fonts) ship from
+	# /opt/log.1mb.dev/static and overlay markgo's embedded defaults via
+	# STATIC_PATH=./static (markgo v3.10.2+).
 	reverse_proxy 127.0.0.1:3001
 
 	# Security headers. CSP is authoritative; `frame-ancestors 'none'` supersedes
