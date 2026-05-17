@@ -6,10 +6,10 @@ build/
 dist/
 *.exe
 
-# Environment
+# Environment — any local .env variant; .env.example is intentionally tracked.
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
 
 # Editor + OS
 .DS_Store

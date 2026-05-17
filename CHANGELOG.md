@@ -12,6 +12,7 @@ Deploy and configuration changes for this deployment of markgo. Format based on 
 - 2026-05-17 — `v3.10.1` shipped. Banner support, server-absolute banner paths, and color-preset dark-mode AA contrast available.
 - 2026-05-17 (later) — banner essays imported. Added Caddy `handle /static/img/banners/*` block to overlay the banners path from the deploy tree; embedded `/static/*` continues to serve from markgo. Filed [`1mb-dev/markgo#59`](https://github.com/1mb-dev/markgo/issues/59) for `STATIC_PATH` overlay mode upstream; remove the Caddy block when it lands.
 - 2026-05-17 (M3) — `v3.10.2` shipped with `STATIC_PATH` overlay (filesystem-first, embedded fallback). Caddy banner-overlay handle dropped; markgo overlay now serves source-controlled assets natively. CSP header active (`frame-ancestors 'none'`, `form-action 'self'`, `base-uri 'self'`), duplicate `Referrer-Policy` and `X-Content-Type-Options` removed from Caddy (markgo authoritative). Brand layer live: `1.` favicon set, `1.log` OG default, Space Mono self-hosted, dark-default theme with muted-blue accent overriding embedded `themes/minimal.css`.
+- 2026-05-17 (M3-polish-1) — `v3.11.0` shipped. Operator-voiced AMA copy via 5 env vars (markgo#63 closed). Theme renamed to `/static/css/themes/1mb.css` with `BLOG_STYLE=1mb` (markgo#64 closed in v3.10.3 relaxed `BLOG_STYLE` validation). Live verified: AMA overlay renders `Ask anything` heading and the rest of the 1mb-voiced copy; Lighthouse holds 100/100/100/100.
 
 ### Added
 
@@ -22,6 +23,9 @@ Deploy and configuration changes for this deployment of markgo. Format based on 
 - Demo-corpus stance excludes meta-artifacts: `banner-sources/` removed; HTML mockups live in author repo.
 - M3 brand layer: `static/img/favicon{.svg,-32x32.png}`, `static/img/apple-touch-icon.png`, `static/og-default.png`, `static/css/themes/minimal.css` (1mb tokens overriding markgo's embedded), `static/css/fonts.css` (Space Mono replacing Inter + Fira Code), `static/fonts/space-mono/` woff2 (latin subset, 400 + 700).
 - Caddy CSP + `frame-ancestors 'none'`, `form-action 'self'`, `base-uri 'self'` in `deploy/Caddyfile.example`.
+- Operator-voiced AMA copy via 5 env vars (`AMA_PAGE_HEADING`, `AMA_PAGE_INTRO`, `AMA_FORM_PLACEHOLDER`, `AMA_SUBMIT_LABEL`, `AMA_THANKYOU_COPY`). Heading reads `Ask anything`; intro carries selectivity stance.
+- Theme file renamed `themes/minimal.css` → `themes/1mb.css` with `BLOG_STYLE=1mb`. v3.10.3 relaxed the `BLOG_STYLE` allowlist so the theme can stand on its own name; forkers see the override at a glance instead of riding on `minimal`.
+- `.gitignore`: any `.env.*` (except `.env.example`) — covers backup `.env.pre-*` files made before live edits.
 
 ### Fixed
 
@@ -43,11 +47,22 @@ Deploy and configuration changes for this deployment of markgo. Format based on 
 - [`1mb-dev/markgo#56`](https://github.com/1mb-dev/markgo/issues/56) — color preset dark-mode AA contrast (ocean/forest/sunset) + live preview on swatch hover/focus. Shipped in v3.10.1.
 - [`1mb-dev/markgo#59`](https://github.com/1mb-dev/markgo/issues/59) — `STATIC_PATH` overlay mode (filesystem-first, embedded fallback). Source-controlled assets no longer require mirroring markgo's full `web/static/` tree. Shipped in v3.10.2.
 
+### Fixed upstream (markgo v3.10.3)
+
+- [`1mb-dev/markgo#64`](https://github.com/1mb-dev/markgo/issues/64) — `BLOG_STYLE` validation relaxed; accepts any non-empty value. Unblocks custom theme names via `STATIC_PATH` overlay without source-modifying markgo.
+- Periodic cleanup pass closing 11 v3.7.0→v3.10.2 review findings: `/admin/drafts` JSON no longer leaks `AskerEmail` (security); `/health` reports real degradation instead of always-200; Open Graph `article:tag` emits one `<meta>` per tag; `writeFileAtomically` cleans stranded `.backup` files; banner images resolve across every rendering path (`og:image`, Schema.org); graceful shutdown drains session and rate-limiter cleanups on SIGTERM.
+
+### Fixed upstream (markgo v3.11.0)
+
+- [`1mb-dev/markgo#63`](https://github.com/1mb-dev/markgo/issues/63) — AMA submission copy is operator-configurable via 5 env vars (`AMA_PAGE_HEADING`, `AMA_PAGE_INTRO`, `AMA_FORM_PLACEHOLDER`, `AMA_SUBMIT_LABEL`, `AMA_THANKYOU_COPY`). Plaintext only, HTML-escaped on render. Defaults preserve pre-v3.11.0 English verbatim.
+- Compose form banner control: the v3.10.0 `banner` / `banner_alt` frontmatter fields are now editable from `/compose`. Upload-based banners flow through `/compose/upload/<slug>`; absolute URLs / server-absolute paths stay read-only on edit.
+- `SHUTDOWN_TIMEOUT` env var (was hardcoded 30s). Configurable for Caddy rolling-restart tuning.
+- Graceful shutdown ordering: cleanup of session store, rate limiters, and templates now runs even when the HTTP server's `Shutdown(ctx)` errors (prevents the `os.Exit(1)` path from skipping cleanups when `SHUTDOWN_TIMEOUT` is hit).
+- Orphan `banner_alt` no longer written without a corresponding `banner` key on compose save.
+
 ### Known issues (upstream, tracked)
 
 - [`1mb-dev/markgo#44`](https://github.com/1mb-dev/markgo/issues/44) — AMA submission filename uses `thought-` prefix instead of `ama-`. Cosmetic; moderation and rendering unaffected. Fix shipped in v3.8.0; pending live re-verification on next AMA submission.
-- [`1mb-dev/markgo#63`](https://github.com/1mb-dev/markgo/issues/63) — AMA landing copy is hardcoded in templates. Operators ship the engine's voice on the page that's most explicitly the operator's interaction channel. Proposed `AMA_PAGE_HEADING` / `AMA_PAGE_INTRO` / `AMA_FORM_PLACEHOLDER` / `AMA_SUBMIT_LABEL` / `AMA_THANKYOU_COPY` env knobs. Filed 2026-05-17.
-- [`1mb-dev/markgo#64`](https://github.com/1mb-dev/markgo/issues/64) — `BLOG_STYLE` validation hard-codes `{"minimal"}` while the docs promise custom themes. Workaround: this deploy rides on `BLOG_STYLE=minimal` and overrides `themes/minimal.css` via `STATIC_PATH` overlay. Filed 2026-05-17.
 
 ### Notes
 
