@@ -172,6 +172,50 @@ AMA flow (requires `ADMIN_USERNAME`/`ADMIN_PASSWORD` set in `.env`):
 - Visit `/admin/ama`. The pending question appears in the moderation list.
 - Answer or delete. Answering appends `\n\n---\n\n<answer>` to the article and flips `draft: false`; the published Q&A then appears on the home feed.
 
+## Reading access logs
+
+Caddy writes its access log to systemd's journal via the `log { output stderr; level INFO }` block in the vhost. `scripts/read-logs.sh` pulls that log over ssh and renders a one-shot HTML report on your machine — no dashboard runs on the VPS, no analytics beacon ships from the site. Server-side hygiene, not analytics.
+
+**One-time VPS setup.** The ssh user must be non-root and able to read the caddy unit's journal. Using the app user (`loguser`) is fine — it's already on the box. Service accounts often ship with no login shell, no `.ssh/authorized_keys`, and no journal access, so all three usually need wiring:
+
+```sh
+ssh root@your.host
+chsh -s /bin/bash loguser
+usermod -aG systemd-journal loguser
+
+install -d -m 700 -o loguser -g loguser /home/loguser/.ssh
+echo 'ssh-ed25519 AAAA... your@key' \
+  >> /home/loguser/.ssh/authorized_keys
+chown loguser:loguser /home/loguser/.ssh/authorized_keys
+chmod 600 /home/loguser/.ssh/authorized_keys
+chown loguser:loguser /home/loguser && chmod 755 /home/loguser
+
+# If sshd is hardened with AllowUsers, add the operator user:
+#   /etc/ssh/sshd_config.d/*.conf -> AllowUsers ... loguser
+#   sshd -t && systemctl reload ssh
+```
+
+**Operator config.** Put the ssh target in `.env.local` (gitignored, machine-local — distinct from `.env`, which gets rsync'd to the VPS):
+
+```sh
+LOG_HOST=loguser@your.host
+LOG_VHOST=your.domain.example   # optional; filters when Caddy hosts multiple sites
+```
+
+If Caddy fronts multiple vhosts on the same systemd unit, the journal carries all of them. Set `LOG_VHOST` to keep only entries for one site (requires `jq`: `brew install jq`).
+
+**Usage:**
+
+```sh
+scripts/read-logs.sh                     # last hour
+scripts/read-logs.sh "24 hours ago"      # last day
+scripts/read-logs.sh "2026-05-15"        # since a date
+```
+
+Requires `goaccess` on your `$PATH` (`brew install goaccess` on macOS). The script uses `goaccess --log-format=CADDY` against Caddy v2's default JSON access log — see the script header for fallback paths if your Caddy emits a different format.
+
+---
+
 ## 7. Forking checklist
 
 If you forked this repo to deploy your own blog:
