@@ -4,12 +4,13 @@
 # Each inbox entry is a per-slug subdirectory containing:
 #   <slug>/<slug>.md          markdown post with markgo frontmatter
 #   <slug>/banner.png         (optional) rasterized banner image
-#   <slug>/banner.html        (optional) editorial source of the PNG
 #
 # This script validates frontmatter, then moves artifacts into place:
 #   inbox/<slug>/<slug>.md   -> articles/<slug>.md
 #   inbox/<slug>/banner.png  -> static/img/banners/<slug>.png
-#   inbox/<slug>/banner.html -> banner-sources/<slug>.html
+#
+# If an inbox entry also contains banner.html, it is ignored -- editorial
+# HTML sources for banners live in the author repo, not tracked here.
 #
 # Source-agnostic: knows nothing about who dropped the entries. Halts on the
 # first failed validation (explicit triage). Does not commit, push, or deploy
@@ -27,7 +28,6 @@ set -euo pipefail
 INBOX_DIR="inbox"
 ARTICLES_DIR="articles"
 BANNERS_DIR="static/img/banners"
-SOURCES_DIR="banner-sources"
 
 VALID_CATEGORIES=(Essays Thoughts Links AMA)
 DATE_PATTERN='^"?[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(Z|[+-][0-9]{2}:[0-9]{2})"?$'
@@ -41,7 +41,7 @@ for arg in "$@"; do
         --dry-run)     DRY_RUN=1 ;;
         --text-only)   FILTER=text ;;
         --banner-only) FILTER=banner ;;
-        --help|-h)     sed -n '2,23p' "$0" | sed 's/^# \?//' ; exit 0 ;;
+        --help|-h)     sed -n '2,24p' "$0" | sed 's/^# \?//' ; exit 0 ;;
         --*)           echo "unknown flag: $arg" >&2 ; exit 2 ;;
         *)             TARGET_SLUG="$arg" ;;
     esac
@@ -130,11 +130,13 @@ process_entry() {
     banner_field=$(get_scalar "$fm" "banner")
     [[ -n "$banner_field" ]] && has_banner_field=1
 
-    if [[ -f "$banner_png" && -f "$banner_html" ]]; then
+    if [[ -f "$banner_html" ]]; then
+        echo "  [skip] banner.html in $slug/ ignored -- HTML sources live in author repo, not tracked here." >&2
+    fi
+
+    if [[ -f "$banner_png" ]]; then
         has_banner_files=1
-        [[ -s "$banner_png" ]]  || fail "$slug" "banner.png is empty"
-        [[ -s "$banner_html" ]] || fail "$slug" "banner.html is empty"
-        grep -q '<html' "$banner_html" || fail "$slug" "banner.html missing <html> tag"
+        [[ -s "$banner_png" ]] || fail "$slug" "banner.png is empty"
     fi
 
     if (( has_banner_field == 1 && has_banner_files == 0 )); then
@@ -154,8 +156,7 @@ process_entry() {
 
     [[ ! -e "$ARTICLES_DIR/$slug.md" ]] || fail "$slug" "$ARTICLES_DIR/$slug.md already exists"
     if (( has_banner_files == 1 )); then
-        [[ ! -e "$BANNERS_DIR/$slug.png" ]]  || fail "$slug" "$BANNERS_DIR/$slug.png already exists"
-        [[ ! -e "$SOURCES_DIR/$slug.html" ]] || fail "$slug" "$SOURCES_DIR/$slug.html already exists"
+        [[ ! -e "$BANNERS_DIR/$slug.png" ]] || fail "$slug" "$BANNERS_DIR/$slug.png already exists"
     fi
 
     if (( DRY_RUN == 1 )); then
@@ -164,12 +165,11 @@ process_entry() {
     fi
 
     mkdir -p "$ARTICLES_DIR"
-    (( has_banner_files == 1 )) && mkdir -p "$BANNERS_DIR" "$SOURCES_DIR"
+    (( has_banner_files == 1 )) && mkdir -p "$BANNERS_DIR"
 
     mv "$md_file" "$ARTICLES_DIR/$slug.md"
     if (( has_banner_files == 1 )); then
-        mv "$banner_png"  "$BANNERS_DIR/$slug.png"
-        mv "$banner_html" "$SOURCES_DIR/$slug.html"
+        mv "$banner_png" "$BANNERS_DIR/$slug.png"
     fi
 
     rmdir "$entry_dir" 2>/dev/null || true
@@ -211,6 +211,6 @@ if (( DRY_RUN == 0 && PROCESSED_COUNT > 0 )); then
     [[ -f "$ARTICLES_DIR/_example.md" ]] && echo "  rm $ARTICLES_DIR/_example.md   # first real-content commit"
     echo "  build/markgo serve --port 3002   # local preview"
     echo "  git status                       # review changes"
-    echo "  git add $ARTICLES_DIR $BANNERS_DIR $SOURCES_DIR 2>/dev/null; git commit -m 'content: ...'"
+    echo "  git add $ARTICLES_DIR $BANNERS_DIR 2>/dev/null; git commit -m 'content: ...'"
     echo "  git push && make deploy DOMAIN=log.1mb.dev"
 fi
