@@ -12,9 +12,11 @@ The `1.` favicon, `1.log` OG card, `1mb` theme CSS, and Space Mono woff2 in this
 static/
 ├── css/
 │   ├── fonts.css                       Self-hosted @font-face declarations.
-│   └── themes/1mb.css                  Theme tokens (colors, fonts) consumed
-│                                       by markgo's main.css var() lookups.
-│                                       Activated via BLOG_STYLE=1mb in .env.
+│   └── themes/minimal.css              Theme tokens. Overrides markgo's
+│                                       embedded themes/minimal.css via
+│                                       STATIC_PATH overlay. BLOG_STYLE
+│                                       validation accepts only "minimal"
+│                                       today, so the override rides on that.
 ├── fonts/space-mono/                   woff2 fonts referenced from fonts.css.
 ├── img/
 │   ├── favicon.svg                     SVG favicon for modern browsers.
@@ -29,6 +31,6 @@ static/
 
 - Drop your own `favicon.svg` / `favicon-32x32.png` / `apple-touch-icon.png` into `img/`.
 - Replace `og-default.png` (1200×630) with your social card.
-- Either keep `themes/1mb.css` and recolor the token values, or write a `themes/yourname.css` and set `BLOG_STYLE=yourname` in `.env`.
+- Edit `themes/minimal.css` to recolor / re-font (tokens override markgo's defaults via overlay), or delete the file to fall back to markgo's stock minimal theme.
 - Replace or remove the Space Mono woff2 + `fonts.css` if you prefer markgo's default Inter + Fira Code.
 - Manifest (`/manifest.json`) is generated dynamically by markgo from `BLOG_*` env values — no static file needed.

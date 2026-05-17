@@ -1,7 +1,13 @@
 /* ==========================================================================
    1mb theme — log.1mb.dev
    Space Mono monospace, dark by default, muted-blue accent.
-   Selector follows markgo's main.css: :root:not([data-theme="light"])
+
+   Overrides markgo's embedded themes/minimal.css via STATIC_PATH overlay.
+   Markgo's BLOG_STYLE validation currently accepts only "minimal", so the
+   theme rides on that name. Forkers: replace tokens with your palette, or
+   restore markgo's defaults by deleting this file.
+
+   Selector mirrors markgo's main.css pattern: :root:not([data-theme="light"])
    matches the default + system-dark + user-toggled-dark cases.
    ========================================================================== */
 
