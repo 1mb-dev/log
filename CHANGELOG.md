@@ -77,7 +77,7 @@ Deploy and configuration changes for this deployment of markgo. Format based on 
 
 ### Notes
 
-- markgo target version: `v3.12.0` (brand-logo customization hook completing the v3.10.2 STATIC_PATH overlay story; markgo#70 closed in this release).
+- markgo target version: `v3.13.0` (dedicated-route predicate + `type: page` content type; markgo#69 closed in this release — `/about` no longer duplicates at `/writing/about`, evergreen pages live at `/p/<slug>`).
 - Reference deployment binds markgo to `127.0.0.1:3001` (configured via `PORT` in `.env`) to coexist with other services on the same host.
 - AMA spam protection is **math captcha + honeypot + `RATE_LIMIT_CONTACT_*`** (not CSRF, contrary to early documentation).
 - RAM is tight on small VPSes (the reference deploy has 464 MiB total; markgo resident ~13-15 MiB). Drop `CACHE_MAX_SIZE` in `.env` if pressure surfaces.
