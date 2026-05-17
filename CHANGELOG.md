@@ -26,6 +26,8 @@ Deploy and configuration changes for this deployment of markgo. Format based on 
 - Operator-voiced AMA copy via 5 env vars (`AMA_PAGE_HEADING`, `AMA_PAGE_INTRO`, `AMA_FORM_PLACEHOLDER`, `AMA_SUBMIT_LABEL`, `AMA_THANKYOU_COPY`). Heading reads `Ask anything`; intro carries selectivity stance.
 - Theme file renamed `themes/minimal.css` → `themes/1mb.css` with `BLOG_STYLE=1mb`. v3.10.3 relaxed the `BLOG_STYLE` allowlist so the theme can stand on its own name; forkers see the override at a glance instead of riding on `minimal`.
 - `.gitignore`: any `.env.*` (except `.env.example`) — covers backup `.env.pre-*` files made before live edits.
+- `scripts/read-logs.sh` — operator-side log reader. SSH to the VPS, stream the Caddy systemd unit's journal, `jq`-filter by `LOG_VHOST` (Caddy aggregates all vhosts onto one stderr stream), pipe to `goaccess --log-format=CADDY`, render one-shot HTML locally. Server-side hygiene only — no service runs on the VPS, no beacon ships from the site. Config via `.env.local` (`LOG_HOST=user@host`, `LOG_VHOST=domain`).
+- `docs/deployment.md` — Reading access logs section. Covers VPS-side operator-user provisioning (login shell, `systemd-journal` group membership, `.ssh/authorized_keys`, sshd `AllowUsers` widening when hardened) and operator-side `.env.local` config.
 
 ### Fixed
 
@@ -51,6 +53,11 @@ Deploy and configuration changes for this deployment of markgo. Format based on 
 
 - [`1mb-dev/markgo#64`](https://github.com/1mb-dev/markgo/issues/64) — `BLOG_STYLE` validation relaxed; accepts any non-empty value. Unblocks custom theme names via `STATIC_PATH` overlay without source-modifying markgo.
 - Periodic cleanup pass closing 11 v3.7.0→v3.10.2 review findings: `/admin/drafts` JSON no longer leaks `AskerEmail` (security); `/health` reports real degradation instead of always-200; Open Graph `article:tag` emits one `<meta>` per tag; `writeFileAtomically` cleans stranded `.backup` files; banner images resolve across every rendering path (`og:image`, Schema.org); graceful shutdown drains session and rate-limiter cleanups on SIGTERM.
+
+### Filed upstream (open)
+
+- [`1mb-dev/markgo#69`](https://github.com/1mb-dev/markgo/issues/69) — generic top-level pages mechanism (`/pages/:slug` or top-level `/:slug` with `type: page` frontmatter). Pages excluded from `/writing` + RSS + JSON feed + sitemap + tag/category indexes. [Scope addendum](https://github.com/1mb-dev/markgo/issues/69#issuecomment-4470725606): same exclusion predicate covers dedicated-handler slugs (today `about` is the only one), so `articles/about.md` can ship without duplicating at `/writing/about`. Blocks Wave 2 of M3-polish-2 (about page + "Run your own?" page).
+- [`1mb-dev/markgo#70`](https://github.com/1mb-dev/markgo/issues/70) — brand-logo customization hook. Header logo is currently inline SVG in `web/templates/base.html`; STATIC_PATH overlay can't reach template-embedded assets. Proposal: inline `static/img/brand-logo.svg` when present, fall back to embedded default. Forkers writing custom logos use CSS-var fills (`var(--color-primary)`) to inherit theme color. Blocks Wave 3 of M3-polish-2.
 
 ### Fixed upstream (markgo v3.11.0)
 
