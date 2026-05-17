@@ -78,3 +78,18 @@
 
     --theme-focus-ring: rgba(56, 189, 248, 0.25);
 }
+
+/* ==========================================================================
+   Component overrides — WCAG 2.1 SC 1.4.1 (use of color).
+   Inline links inside article/page body need a non-color affordance. The
+   theme-primary link on text-secondary surrounding hits 1.25:1 contrast,
+   under the 3:1 floor — color alone wouldn't pass. Underline restores
+   distinguishability without changing the link color the rest of the
+   theme depends on.
+   ========================================================================== */
+
+.article-content p a {
+    text-decoration: underline;
+    text-decoration-thickness: from-font;
+    text-underline-offset: 0.15em;
+}
