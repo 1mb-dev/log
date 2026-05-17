@@ -13,6 +13,7 @@ Deploy and configuration changes for this deployment of markgo. Format based on 
 - 2026-05-17 (later) — banner essays imported. Added Caddy `handle /static/img/banners/*` block to overlay the banners path from the deploy tree; embedded `/static/*` continues to serve from markgo. Filed [`1mb-dev/markgo#59`](https://github.com/1mb-dev/markgo/issues/59) for `STATIC_PATH` overlay mode upstream; remove the Caddy block when it lands.
 - 2026-05-17 (M3) — `v3.10.2` shipped with `STATIC_PATH` overlay (filesystem-first, embedded fallback). Caddy banner-overlay handle dropped; markgo overlay now serves source-controlled assets natively. CSP header active (`frame-ancestors 'none'`, `form-action 'self'`, `base-uri 'self'`), duplicate `Referrer-Policy` and `X-Content-Type-Options` removed from Caddy (markgo authoritative). Brand layer live: `1.` favicon set, `1.log` OG default, Space Mono self-hosted, dark-default theme with muted-blue accent overriding embedded `themes/minimal.css`.
 - 2026-05-17 (M3-polish-1) — `v3.11.0` shipped. Operator-voiced AMA copy via 5 env vars (markgo#63 closed). Theme renamed to `/static/css/themes/1mb.css` with `BLOG_STYLE=1mb` (markgo#64 closed in v3.10.3 relaxed `BLOG_STYLE` validation). Live verified: AMA overlay renders `Ask anything` heading and the rest of the 1mb-voiced copy; Lighthouse holds 100/100/100/100.
+- 2026-05-17 (M3-polish-2 Wave 3) — `v3.12.0` shipped. Header brand-logo overridable via `static/img/brand-logo.svg` (markgo#70 closed). Reference deploy ships a `1.` glyph mirroring the favicon, theme-reactive via `--color-bg-primary` / `--color-text-primary`. CSP unchanged; Lighthouse holds 100/100/100/100. Wave 2 still gated on markgo#69 (top-level pages + dedicated-handler-slug exclusion).
 
 ### Added
 
@@ -28,6 +29,7 @@ Deploy and configuration changes for this deployment of markgo. Format based on 
 - `.gitignore`: any `.env.*` (except `.env.example`) — covers backup `.env.pre-*` files made before live edits.
 - `scripts/read-logs.sh` — operator-side log reader. SSH to the VPS, stream the Caddy systemd unit's journal, `jq`-filter by `LOG_VHOST` (Caddy aggregates all vhosts onto one stderr stream), pipe to `goaccess --log-format=CADDY`, render one-shot HTML locally. Server-side hygiene only — no service runs on the VPS, no beacon ships from the site. Config via `.env.local` (`LOG_HOST=user@host`, `LOG_VHOST=domain`).
 - `docs/deployment.md` — Reading access logs section. Covers VPS-side operator-user provisioning (login shell, `systemd-journal` group membership, `.ssh/authorized_keys`, sshd `AllowUsers` widening when hardened) and operator-side `.env.local` config.
+- `static/img/brand-logo.svg` — `1.` glyph header logo. Mirrors the favicon's two-color treatment but inherits theme tokens (`--color-bg-primary` background, `--color-text-primary` text), so it tracks the active theme. Inlined by markgo v3.12.0+ at request time via the brand-logo overlay hook (≤32 KiB cap, well-formed XML, `class="brand-logo"` injected if absent).
 
 ### Fixed
 
@@ -57,8 +59,6 @@ Deploy and configuration changes for this deployment of markgo. Format based on 
 ### Filed upstream (open)
 
 - [`1mb-dev/markgo#69`](https://github.com/1mb-dev/markgo/issues/69) — generic top-level pages mechanism (`/pages/:slug` or top-level `/:slug` with `type: page` frontmatter). Pages excluded from `/writing` + RSS + JSON feed + sitemap + tag/category indexes. [Scope addendum](https://github.com/1mb-dev/markgo/issues/69#issuecomment-4470725606): same exclusion predicate covers dedicated-handler slugs (today `about` is the only one), so `articles/about.md` can ship without duplicating at `/writing/about`. Blocks Wave 2 of M3-polish-2 (about page + "Run your own?" page).
-- [`1mb-dev/markgo#70`](https://github.com/1mb-dev/markgo/issues/70) — brand-logo customization hook. Header logo is currently inline SVG in `web/templates/base.html`; STATIC_PATH overlay can't reach template-embedded assets. Proposal: inline `static/img/brand-logo.svg` when present, fall back to embedded default. Forkers writing custom logos use CSS-var fills (`var(--color-primary)`) to inherit theme color. Blocks Wave 3 of M3-polish-2.
-
 ### Fixed upstream (markgo v3.11.0)
 
 - [`1mb-dev/markgo#63`](https://github.com/1mb-dev/markgo/issues/63) — AMA submission copy is operator-configurable via 5 env vars (`AMA_PAGE_HEADING`, `AMA_PAGE_INTRO`, `AMA_FORM_PLACEHOLDER`, `AMA_SUBMIT_LABEL`, `AMA_THANKYOU_COPY`). Plaintext only, HTML-escaped on render. Defaults preserve pre-v3.11.0 English verbatim.
@@ -66,6 +66,10 @@ Deploy and configuration changes for this deployment of markgo. Format based on 
 - `SHUTDOWN_TIMEOUT` env var (was hardcoded 30s). Configurable for Caddy rolling-restart tuning.
 - Graceful shutdown ordering: cleanup of session store, rate limiters, and templates now runs even when the HTTP server's `Shutdown(ctx)` errors (prevents the `os.Exit(1)` path from skipping cleanups when `SHUTDOWN_TIMEOUT` is hit).
 - Orphan `banner_alt` no longer written without a corresponding `banner` key on compose save.
+
+### Fixed upstream (markgo v3.12.0)
+
+- [`1mb-dev/markgo#70`](https://github.com/1mb-dev/markgo/issues/70) — operator brand-logo override. Drop SVG at `<STATIC_PATH>/img/brand-logo.svg`; markgo validates well-formed XML + `<svg>` root + ≤32 KiB, injects `class="brand-logo"` when absent, silent fallback on missing, warned fallback on validation failure. Shipped in v3.12.0 (PR #71). Verified against this deploy — header now renders the `1.` glyph; CSP unchanged; Lighthouse holds 100/100/100/100.
 
 ### Known issues (upstream, tracked)
 
