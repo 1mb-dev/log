@@ -1,19 +1,34 @@
 # Static asset overrides
 
-Drop CSS overrides, favicons, fonts, or OG default images here, but read the trap first.
+Drop CSS overrides, favicons, fonts, or OG default images here. Markgo's `STATIC_PATH` is **overlay mode** (since v3.10.2): files in this tree are served first, embedded defaults fall back for anything you didn't replace. No mirror needed.
 
-**Markgo's `STATIC_PATH` is exclusive, not overlay.** When `STATIC_PATH` is set in `.env` and the directory exists, markgo serves `/static/*` from there *only* — its embedded defaults are bypassed entirely. There is no per-file fallback. If you set `STATIC_PATH=./static` and put only `favicon.ico` here, every other asset (`css/style.css`, `js/app.js`, `img/icon-192x192.png`, etc.) 404s.
+Set `STATIC_PATH=./static` in `.env` once this directory has at least one override.
 
-Safe patterns:
+## What ships with the reference deployment
 
-- **Embedded defaults only:** leave `STATIC_PATH=` empty in `.env`. Markgo serves its built-in CSS/icons/manifest. No overrides possible, but nothing breaks.
-- **Full overlay:** mirror markgo's `web/static/` tree into this directory, then replace the specific files you want to change. Re-sync on markgo version bumps.
+The `1.` favicon, `1.log` OG card, `1mb` theme CSS, and Space Mono woff2 in this directory are the maintainer's brand chrome — example overrides at the exact paths markgo's HTML references. Replace with your own when forking.
 
-Common files to override once you've mirrored:
+```
+static/
+├── css/
+│   ├── fonts.css                       Self-hosted @font-face declarations.
+│   └── themes/1mb.css                  Theme tokens (colors, fonts) consumed
+│                                       by markgo's main.css var() lookups.
+│                                       Activated via BLOG_STYLE=1mb in .env.
+├── fonts/space-mono/                   woff2 fonts referenced from fonts.css.
+├── img/
+│   ├── favicon.svg                     SVG favicon for modern browsers.
+│   ├── favicon-32x32.png               PNG favicon (markgo's emitted path).
+│   ├── apple-touch-icon.png            180×180 iOS home-screen icon.
+│   └── banners/                        Per-article hero PNGs (markgo banner: frontmatter).
+└── og-default.png                      1200×630 default social card.
+                                        Referenced by SEO_DEFAULT_IMAGE in .env.
+```
 
-- `css/overrides.css` -- visual customizations on top of markgo's default theme.
-- `favicon.ico`, `favicon-16.png`, `favicon-32.png`, `apple-touch-icon.png` -- your icons.
-- `og-default.png` (1200×630) -- the default social card for articles without an explicit image. Referenced by `SEO_DEFAULT_IMAGE` in `.env`.
-- `manifest.json` -- overrides the dynamically generated PWA manifest if you need custom icons.
+## Forking checklist
 
-When you fork this repo, treat any files you find here as examples -- replace them with your own. The reference deployment at `log.1mb.dev` ships `STATIC_PATH=` (empty) until the maintainer adds a full override set.
+- Drop your own `favicon.svg` / `favicon-32x32.png` / `apple-touch-icon.png` into `img/`.
+- Replace `og-default.png` (1200×630) with your social card.
+- Either keep `themes/1mb.css` and recolor the token values, or write a `themes/yourname.css` and set `BLOG_STYLE=yourname` in `.env`.
+- Replace or remove the Space Mono woff2 + `fonts.css` if you prefer markgo's default Inter + Fira Code.
+- Manifest (`/manifest.json`) is generated dynamically by markgo from `BLOG_*` env values — no static file needed.

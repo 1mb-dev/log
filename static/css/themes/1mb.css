@@ -1,0 +1,74 @@
+/* ==========================================================================
+   1mb theme — log.1mb.dev
+   Space Mono monospace, dark by default, muted-blue accent.
+   Selector follows markgo's main.css: :root:not([data-theme="light"])
+   matches the default + system-dark + user-toggled-dark cases.
+   ========================================================================== */
+
+:root:not([data-theme="light"]) {
+    /* Primary colors */
+    --theme-primary: #7dd3fc;
+    --theme-primary-dark: #38bdf8;
+    --theme-secondary: #888888;
+    --theme-accent: #7dd3fc;
+
+    /* Status colors */
+    --theme-success: #86efac;
+    --theme-warning: #fbbf24;
+    --theme-error: #fca5a5;
+
+    /* Text */
+    --theme-text-primary: #e5e5e5;
+    --theme-text-secondary: #b3b3b3;
+    --theme-text-muted: #888888;
+    --theme-text-inverse: #0a0a0a;
+
+    /* Backgrounds */
+    --theme-bg-primary: #0a0a0a;
+    --theme-bg-secondary: #151515;
+    --theme-bg-tertiary: #2a2a2a;
+    --theme-bg-dark: #050505;
+
+    /* Borders */
+    --theme-border: #2a2a2a;
+    --theme-border-light: #1a1a1a;
+    --theme-border-dark: #3a3a3a;
+
+    /* Feedback */
+    --theme-success-bg: #1a3a2a;
+    --theme-success-text: #86efac;
+    --theme-success-border: #2d5a3e;
+    --theme-error-bg: #3b1c22;
+    --theme-error-text: #fca5a5;
+    --theme-error-border: #5a2d35;
+
+    /* Focus */
+    --theme-focus-ring: rgba(125, 211, 252, 0.25);
+
+    /* Typography — Space Mono with Monaco at the head of the fallback stack */
+    --theme-font-sans:
+        "Space Mono", "Monaco", "Menlo", "Consolas", "DejaVu Sans Mono",
+        ui-monospace, monospace;
+    --theme-font-mono:
+        "Space Mono", "Monaco", "Menlo", "Consolas", "DejaVu Sans Mono",
+        ui-monospace, monospace;
+}
+
+/* Manual light toggle — minimal support for forkers who prefer light. */
+[data-theme="light"] {
+    --theme-text-primary: #1a1a1a;
+    --theme-text-secondary: #4a4a4a;
+    --theme-text-muted: #6b6b6b;
+    --theme-text-inverse: #fafafa;
+
+    --theme-bg-primary: #fafafa;
+    --theme-bg-secondary: #f0f0f0;
+    --theme-bg-tertiary: #e0e0e0;
+    --theme-bg-dark: #d0d0d0;
+
+    --theme-border: #e0e0e0;
+    --theme-border-light: #f0f0f0;
+    --theme-border-dark: #d0d0d0;
+
+    --theme-focus-ring: rgba(56, 189, 248, 0.25);
+}
