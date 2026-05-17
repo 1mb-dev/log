@@ -37,26 +37,13 @@ A markgo deployment with:
 - **SEO**: RSS, sitemap, JSON-LD `Article` schema, OG cards.
 - No analytics. No comments. No engagement features beyond AMA.
 
-Everything is configured via `.env`. The full feature surface lives in [markgo's docs](https://github.com/1mb-dev/markgo/tree/main/docs).
+Full feature surface lives in [markgo's docs](https://github.com/1mb-dev/markgo/tree/main/docs).
 
 ## When to use this
 
-Fork this harness when you want **a self-hosted, markdown-in-git blog with a small operational footprint** -- single Go binary, one systemd unit, Caddy in front for TLS. The reference deployment runs comfortably on a small VPS (markgo itself is ~15 MiB resident).
+Fork this when you want a self-hosted, markdown-in-git blog with a small operational footprint — single Go binary, one systemd unit, Caddy in front for TLS. Comfortable on a small VPS (markgo is ~15 MiB resident).
 
-**Choose this over a static-site generator (Hugo, Jekyll, Astro) when:**
-- You want dynamic features: AMA, compose-from-anywhere, real-time feed updates without a rebuild step.
-- You want a single binary you `ssh`-deploy, not a CI-deploy-to-CDN pipeline.
-
-**Choose this over Ghost or WordPress when:**
-- You want markdown-in-git as the source of truth, not a database.
-- You don't need plugins, multi-author dashboards, or theme marketplaces.
-
-**Choose a managed service (Bear, Mataroa, Substack) instead when:**
-- You don't want to run a server at all.
-
-**Stay upstream (just use [markgo](https://github.com/1mb-dev/markgo)) when:**
-- You only need the engine; you have your own deploy tooling.
-- Your environment differs significantly from "Debian + Caddy + systemd".
+Not for you if a static-site generator is enough (no dynamic features needed), if you want plugins / themes / multi-author dashboards (use Ghost or WordPress), if you don't want to run a server at all (use Bear, Mataroa, Substack), or if you have your own deploy tooling around the engine (use [markgo](https://github.com/1mb-dev/markgo) directly).
 
 ## Repository layout
 
@@ -76,18 +63,7 @@ log/
 
 ## Configuration
 
-`.env.example` is grounded against markgo v3.10.1; every knob is annotated. Copy to `.env`, edit, then secure on the deploy target with `chmod 600 .env`.
-
-A few choices baked into the reference deployment, none of them required:
-
-- Markgo binds to `127.0.0.1:3001` rather than the default `3000`, to coexist with other services on the host.
-- Caddy fronts the binary for TLS and access logging; systemd supervises it with hardening flags.
-
-## Reverse proxy and service
-
-[`deploy/Caddyfile.example`](deploy/Caddyfile.example) -- paste the block into your existing Caddyfile or drop the file into `/etc/caddy/conf.d/`. Caddy provisions TLS via Let's Encrypt on first request to the domain.
-
-[`deploy/log.service.example`](deploy/log.service.example) -- systemd unit modeled on markgo's own production unit. Hardened with `NoNewPrivileges`, `ProtectSystem=strict`, and `ReadWritePaths` scoped to `articles/`, `uploads/`, and `logs/`. Edit user and paths for your setup before installing.
+`.env.example` is annotated and grounded against markgo v3.10.1. See [`docs/deployment.md`](docs/deployment.md) §4 for the required edits, and §5 for the Caddy / systemd install paths.
 
 ## Customising
 
@@ -97,9 +73,7 @@ A few choices baked into the reference deployment, none of them required:
 
 ## License
 
-Repository structure (templates, deploy configs, `Makefile`, documentation) is MIT licensed -- see [`LICENSE`](LICENSE).
-
-Content under `articles/` is the author's, all rights reserved -- see [`LICENSE-CONTENT.md`](LICENSE-CONTENT.md). Forkers replace it with their own writing.
+Repo structure (templates, deploy configs, Makefile, docs) is MIT — see [`LICENSE`](LICENSE). Content under `articles/` is the author's, all rights reserved — see [`LICENSE-CONTENT.md`](LICENSE-CONTENT.md). Forkers replace it with their own writing.
 
 ## Status
 
