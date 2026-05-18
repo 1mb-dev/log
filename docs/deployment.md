@@ -82,13 +82,14 @@ make deploy DOMAIN=your.domain.example
 
 What `make deploy` does:
 
-1. Builds the markgo binary if missing (via `make build`).
-2. Renders the systemd unit by substituting `User=`, `Group=`, paths, and `SyslogIdentifier=` from `deploy/log.service.example`.
-3. `ssh`'s to the VPS as root and idempotently creates the service user (`loguser` by default) and the deploy tree (`/opt/$(DOMAIN)/{articles,static,uploads,logs}`).
-4. rsyncs the binary, `.env`, and rendered unit to a staging path on the VPS.
-5. rsyncs `articles/` (additive — does **not** delete remote files, so markgo's `/compose` output stays put) and `static/` (mirrored with `--delete`).
-6. Installs the binary (mode 0755), `.env` (mode 0600), and systemd unit. `chown`s the tree to the service user. Reloads systemd, enables and restarts the service, then waits for `is-active`.
-7. Runs `scripts/verify-deploy.sh DOMAIN` to confirm health.
+1. **Pre-flight confirmation.** Surfaces local `.env` mtime and line count; prompts `y/N` before any build or ssh. Since deploy is local-authoritative (`.env` is rsynced onto the VPS, overwriting whatever's there), this gate exists so you don't push a stale local `.env` after hand-editing prod, or vice versa. Default is N — Enter aborts. Bypass via `make deploy` alone is not supported; if you need a confirmed scripted retry, `yes | make deploy DOMAIN=...`.
+2. Builds the markgo binary if missing (via `make build`).
+3. Renders the systemd unit by substituting `User=`, `Group=`, paths, and `SyslogIdentifier=` from `deploy/log.service.example`.
+4. `ssh`'s to the VPS as root and idempotently creates the service user (`loguser` by default) and the deploy tree (`/opt/$(DOMAIN)/{articles,static,uploads,logs}`).
+5. rsyncs the binary, `.env`, and rendered unit to a staging path on the VPS.
+6. rsyncs `articles/` (additive — does **not** delete remote files, so markgo's `/compose` output stays put) and `static/` (mirrored with `--delete`).
+7. Installs the binary (mode 0755), `.env` (mode 0600), and systemd unit. `chown`s the tree to the service user. Reloads systemd, enables and restarts the service, then waits for `is-active`.
+8. Runs `scripts/verify-deploy.sh DOMAIN` to confirm health.
 
 Tunable variables (matching the reference deploy's defaults — override for your fork):
 

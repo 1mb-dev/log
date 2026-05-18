@@ -42,7 +42,7 @@ DEPLOY_USER  ?= loguser
 DEPLOY_PATH  ?= /opt/$(DOMAIN)
 SERVICE_NAME ?= log
 
-.PHONY: help fetch-markgo build deploy verify clean pull-from-vps
+.PHONY: help fetch-markgo build deploy verify clean pull-from-vps confirm-env
 
 help: ## Show this help
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -67,9 +67,19 @@ build: fetch-markgo ## Verify the deploy bundle is ready
 	@ls articles/*.md >/dev/null 2>&1 || echo "warn: articles/ is empty -- replace _example.md before deploy"
 	@echo "==> Ready: $(BINARY) + articles/ + static/"
 
-deploy: build ## Deploy to DOMAIN: push binary + content + .env, install unit, restart, verify
-	@test -n "$(DOMAIN)" || { echo "usage: make deploy DOMAIN=your.domain.example"; exit 1; }
+confirm-env: ## Pre-flight: surface local .env state, prompt to proceed
 	@test -f .env || { echo "missing .env -- cp .env.example .env, fill in values, then retry"; exit 1; }
+	@echo "==> Pre-flight: local .env is mirrored to prod (overwrites $(SSH_TARGET):$(DEPLOY_PATH)/.env)"
+	@env_mtime=$$(stat -f '%Sm' -t '%Y-%m-%d %H:%M' .env 2>/dev/null || stat -c '%y' .env 2>/dev/null | cut -d. -f1); \
+	 env_lines=$$(wc -l < .env | tr -d ' '); \
+	 echo "    local .env: $${env_lines} lines, last modified $${env_mtime}"; \
+	 echo "    If env vars need adding or changing, abort, edit local .env, retry."; \
+	 printf "    Proceed with this .env? [y/N] "; \
+	 read ans; \
+	 case "$$ans" in [yY]|[yY][eE][sS]) ;; *) echo "    aborted"; exit 1 ;; esac
+
+deploy: confirm-env build ## Deploy to DOMAIN: push binary + content + .env, install unit, restart, verify
+	@test -n "$(DOMAIN)" || { echo "usage: make deploy DOMAIN=your.domain.example"; exit 1; }
 	@echo "==> deploy: $(SSH_TARGET):$(DEPLOY_PATH) (user=$(DEPLOY_USER), service=$(SERVICE_NAME))"
 	@mkdir -p $(BUILD_DIR)
 	@sed -e 's|/opt/log.1mb.dev|$(DEPLOY_PATH)|g' \
