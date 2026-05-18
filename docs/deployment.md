@@ -172,6 +172,10 @@ AMA flow (requires `ADMIN_USERNAME`/`ADMIN_PASSWORD` set in `.env`):
 - Visit `/admin/ama`. The pending question appears in the moderation list.
 - Answer or delete. Answering appends `\n\n---\n\n<answer>` to the article and flips `draft: false`; the published Q&A then appears on the home feed.
 
+## External uptime probe
+
+The reference deploy uses UptimeRobot to poll `/health` every 5 minutes and alert on non-200. Configured operator-side (account, monitor, alert channel); not codified in this repo. For your fork: any pull-mode probe service pointed at `/health` works — markgo's endpoint returns `200` only when the binary is up and serving.
+
 ## Reading access logs
 
 Caddy writes its access log to systemd's journal via the `log { output stderr; level INFO }` block in the vhost. `scripts/read-logs.sh` pulls that log over ssh and renders a one-shot HTML report on your machine — no dashboard runs on the VPS, no analytics beacon ships from the site. Server-side hygiene, not analytics.
