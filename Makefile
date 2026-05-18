@@ -42,7 +42,7 @@ DEPLOY_USER  ?= loguser
 DEPLOY_PATH  ?= /opt/$(DOMAIN)
 SERVICE_NAME ?= log
 
-.PHONY: help fetch-markgo build deploy verify clean
+.PHONY: help fetch-markgo build deploy verify clean pull-from-vps
 
 help: ## Show this help
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -108,3 +108,11 @@ verify: ## Run smoke tests against DOMAIN
 
 clean: ## Remove build artifacts
 	rm -rf $(BUILD_DIR)
+
+pull-from-vps: ## Pull VPS-authored content (articles/) back to local clone
+	@test -n "$(DOMAIN)" || { echo "usage: make pull-from-vps DOMAIN=your.domain.example"; exit 1; }
+	@echo "==> pull articles/ from $(DEPLOY_USER)@$(DOMAIN):$(DEPLOY_PATH)/articles/"
+	@rsync -av $(DEPLOY_USER)@$(DOMAIN):$(DEPLOY_PATH)/articles/ articles/
+	@echo ""
+	@echo "==> git status articles/ (review + commit if anything new):"
+	@git status --short articles/ || true
