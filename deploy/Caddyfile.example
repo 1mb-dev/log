@@ -16,18 +16,12 @@ log.1mb.dev {
 	# STATIC_PATH=./static (markgo v3.10.2+).
 	reverse_proxy 127.0.0.1:3001
 
-	# Security headers. CSP is authoritative; `frame-ancestors 'none'` supersedes
-	# X-Frame-Options on modern browsers. Markgo emits X-Content-Type-Options,
-	# Referrer-Policy, X-Frame-Options, and X-XSS-Protection — do not duplicate here.
-	# `'unsafe-inline'` for script/style is required by markgo's inline scripts
-	# (service worker registration, AMA math captcha). Tighten upstream when those
-	# move to external files.
-	header {
-		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
-		Permissions-Policy "interest-cohort=(), browsing-topics=()"
-		Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
-		# Markgo controls Cache-Control for /static/* and /sw.js; do not override here.
-	}
+	# Security headers are markgo-authoritative (v3.16.0+). Markgo emits CSP
+	# (with SHA-256 hash for its single inline FOUC script), HSTS, Permissions-
+	# Policy, X-Content-Type-Options, Referrer-Policy, and X-Frame-Options — do
+	# not duplicate here. If you front markgo with an edge proxy that emits its
+	# own CSP, set CSP_DISABLE=true in .env to suppress markgo's. Cache-Control
+	# for /static/* and /sw.js is also markgo-controlled.
 
 	encode gzip zstd
 
