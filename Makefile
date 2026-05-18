@@ -64,8 +64,15 @@ fetch-markgo: ## Build the markgo binary for $(GOOS)/$(GOARCH)
 
 build: fetch-markgo ## Verify the deploy bundle is ready
 	@test -x $(BINARY) || { echo "missing $(BINARY); run make fetch-markgo"; exit 1; }
+	@if ! strings $(BINARY) | grep -Fxq "$(MARKGO_REF)"; then \
+	  echo "==> stamp mismatch: $(BINARY) does not embed $(MARKGO_REF) as a clean tag."; \
+	  echo "    Likely cause: $(MARKGO_SRC) is past the $(MARKGO_REF) tag (e.g. one commit ahead on main)."; \
+	  echo "    Fix: MARKGO_SRC=__none__ make fetch-markgo (forces clone of $(MARKGO_REF)),"; \
+	  echo "         or check out $(MARKGO_REF) in $(MARKGO_SRC) before building."; \
+	  exit 1; \
+	fi
 	@ls articles/*.md >/dev/null 2>&1 || echo "warn: articles/ is empty -- replace _example.md before deploy"
-	@echo "==> Ready: $(BINARY) + articles/ + static/"
+	@echo "==> Ready: $(BINARY) (stamped $(MARKGO_REF)) + articles/ + static/"
 
 confirm-env: ## Pre-flight: surface local .env state, prompt to proceed
 	@test -f .env || { echo "missing .env -- cp .env.example .env, fill in values, then retry"; exit 1; }
