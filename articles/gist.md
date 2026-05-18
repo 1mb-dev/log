@@ -1,7 +1,7 @@
 ---
 title: Gist
 description: Spec first. Stack later.
-date: "2026-05-18T10:30:00Z"
+date: "2026-04-19T10:00:00Z"
 tags:
   - spec
   - planning
@@ -17,6 +17,6 @@ Spec first. Stack later.
 
 Describe the idea.
 Answer the architecture questions.
-Download a deploy-ready spec.
+Walk away with a deploy-ready zero-stack spec.
 
-Build after you know what you're building.
+$0/month is the architecture, not the budget.

@@ -1,7 +1,7 @@
 ---
 title: Sift
 description: A feed with a last page. Study desk, not newsstand.
-date: "2026-05-18T14:30:00Z"
+date: "2026-04-11T10:00:00Z"
 tags:
   - feed
   - attention

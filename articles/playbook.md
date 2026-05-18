@@ -1,11 +1,11 @@
 ---
 title: Playbook
-description: The toolkit behind the writing.
-date: "2026-05-18T11:00:00Z"
+description: Sketch, review, verify. A /command per step.
+date: "2026-04-26T10:00:00Z"
 tags:
   - sdlc
-  - development
-  - meta
+  - engineering
+  - practice
 categories:
   - Links
 draft: false
@@ -13,9 +13,12 @@ type: link
 link_url: https://playbook.1mb.dev
 ---
 
-The toolkit behind the writing.
+The discipline of shipping well.
 
-Markdown commands for every step from sketch to ship.
-Tool-adaptable. Convention over framework.
+Sketch before build.
+Review before ship.
+Verify before done.
 
-What you read here ran through these.
+Atomic changes. Convention, not framework. Tool-adaptable.
+
+A /command per step. Solo, or with a thinking partner.

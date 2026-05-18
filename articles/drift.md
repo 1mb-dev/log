@@ -1,7 +1,7 @@
 ---
-title: Drift FM
+title: Drift
 description: Mood, not genre. Always-on internet radio.
-date: "2026-05-18T14:00:00Z"
+date: "2026-04-06T10:00:00Z"
 tags:
   - radio
   - mood
@@ -18,5 +18,3 @@ Mood, not genre.
 Turn it on.
 Pick a mood.
 Let it drift.
-
-Engine is open. github.com/1mb-dev/driftfm — self-host with your own mp3s.

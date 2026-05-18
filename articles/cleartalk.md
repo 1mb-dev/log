@@ -1,7 +1,7 @@
 ---
 title: Cleartalk
 description: Draft the message before sending.
-date: "2026-05-18T12:00:00Z"
+date: "2026-04-22T10:00:00Z"
 tags:
   - communication
   - drafting
