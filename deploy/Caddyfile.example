@@ -1,11 +1,9 @@
 # deploy/Caddyfile.example -- sample Caddy vhost block for a markgo deployment.
 #
-# Copy the block below into your existing Caddyfile, or use this file standalone:
-#   sudo cp deploy/Caddyfile.example /etc/caddy/sites/log.1mb.dev.caddy
-#   sudo systemctl reload caddy
-#
-# Caddy auto-provisions TLS via Let's Encrypt on first request -- no certbot needed.
-# Replace `log.1mb.dev` with your domain before deploying.
+# Two install paths (fresh Caddyfile vs conf.d/ import for multi-site hosts) are
+# walked through in docs/deployment.md. Caddy auto-provisions TLS via Let's
+# Encrypt on first request -- no certbot needed. Replace `log.1mb.dev` with
+# your domain before deploying.
 
 log.1mb.dev {
 	# Markgo binds to localhost. Caddy fronts it for TLS, compression, and access
