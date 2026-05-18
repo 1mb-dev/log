@@ -4,9 +4,8 @@
 # Usage: scripts/verify-deploy.sh [domain]
 #   domain defaults to log.1mb.dev
 #
-# Exits non-zero on the first failure. Uses GET (not HEAD): markgo registers
-# routes via gin's .GET() only, so HEAD requests fall through to NoRoute and
-# 404 even on healthy endpoints. Curl's -f makes any 4xx/5xx response fatal.
+# Exits non-zero on the first failure -- curl's -f makes any 4xx/5xx
+# response fatal on the first probed endpoint.
 set -euo pipefail
 
 DOMAIN="${1:-log.1mb.dev}"

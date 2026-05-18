@@ -155,7 +155,7 @@ Run the smoke-test script:
 scripts/verify-deploy.sh your.domain.example
 ```
 
-It checks `/health`, `/feed.xml`, `/sitemap.xml`, `/robots.txt`, `/manifest.json`, and the HSTS header. Note: it uses `GET` requests with `curl -f`, not `HEAD`. Markgo registers routes via gin's `.GET()` only, so HEAD requests fall through to 404 — many uptime monitors will need their probe method set to GET until that's fixed upstream.
+It checks `/health`, `/feed.xml`, `/sitemap.xml`, `/robots.txt`, `/manifest.json`, and the HSTS header. Probes use `GET` with `curl -f` — fatal on any 4xx/5xx response on the first probed endpoint.
 
 Browser checks worth doing once:
 
@@ -238,8 +238,6 @@ If you forked this repo to deploy your own blog:
 **TLS not provisioning.** Caddy needs ports 80 and 443 reachable from the public internet. Check firewall (`sudo ufw status` or your cloud firewall console). Watch `journalctl -u caddy -f` while curling your domain to see the ACME flow.
 
 **Static asset overrides not appearing.** Overlay mode falls back to embedded for any path you didn't replace; if your override doesn't show, confirm the file is present in `./static/` at the exact path markgo's HTML references (`/static/img/favicon.svg` → `./static/img/favicon.svg`). Pre-v3.10.2 the handler was exclusive; if you're on an older binary, either bump or leave `STATIC_PATH=` empty.
-
-**Uptime monitor reports the site as down.** Many monitors probe with HEAD by default. Markgo currently returns 404 for HEAD on every registered route — switch the probe method to GET. (Tracked as an upstream fix in `1mb-dev/markgo`.)
 
 **AMA submission rejected.** Confirm `ADMIN_USERNAME` and `ADMIN_PASSWORD` are set — without them, the route isn't registered. Check rate limits in `.env` (`RATE_LIMIT_CONTACT_*`, shared with contact form: 5 requests per hour by default). If submissions silently 200 with no question landing in `/admin/ama`, you likely tripped the honeypot — your client filled the hidden `website` field.
 
