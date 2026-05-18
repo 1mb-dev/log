@@ -214,6 +214,16 @@ scripts/read-logs.sh "2026-05-15"        # since a date
 
 Requires `goaccess` on your `$PATH` (`brew install goaccess` on macOS). The script uses `goaccess --log-format=CADDY` against Caddy v2's default JSON access log — see the script header for fallback paths if your Caddy emits a different format.
 
+## Pulling VPS-authored content back
+
+AMA submissions and compose-published articles land in `articles/` on the VPS — not in your local clone. `make deploy` is additive (it pushes local content up, doesn't pull VPS content down), so VPS-only content stays VPS-only until you pull it back.
+
+```sh
+make pull-from-vps DOMAIN=your.domain.example
+```
+
+Idempotent: rsyncs `articles/` from the VPS into your local clone (additive — won't delete local-only files), then runs `git status --short articles/` so you can review and commit anything new. Run before composing locally or shipping changes; otherwise VPS-side AMAs and compose posts won't make it back to the canonical git history.
+
 ---
 
 ## 7. Forking checklist
