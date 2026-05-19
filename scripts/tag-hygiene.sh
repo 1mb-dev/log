@@ -42,6 +42,11 @@ done
 #   1. Update the BLOCKED_TAGS / CANONICAL_TAGS lists below.
 #   2. Mirror the same change in scripts/import-inbox.sh.
 #   3. Note the rationale in todos/sketch-tag-hygiene.md or the relevant doc.
+#
+# Visual weighting on /tags is operator-tuned, not auto-calibrated. log's
+# static/css/themes/1mb.css buckets .tag-cloud-item by data-count (currently
+# 1-2 / 3-5 / 6+). When the head/mid/tail distribution below shifts
+# meaningfully, revisit those bracket boundaries.
 # ----------------------------------------------------------------------------
 
 python3 - "$QUIET" "$JSON" <<'PY'
@@ -190,6 +195,9 @@ if not QUIET:
     print(f"  head (5+ articles):  {head} tags")
     print(f"  mid  (2-4 articles): {mid} tags")
     print(f"  tail (1 article):    {tail} tags")
+    print(f"\n  Reminder: if your theme buckets .tag-cloud-item by data-count")
+    print(f"  (see static/css/themes/1mb.css), revisit bracket boundaries")
+    print(f"  when this distribution shifts meaningfully.")
 
 # Blocked reintroductions
 if blocked_findings:
