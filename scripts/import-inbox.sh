@@ -32,6 +32,29 @@ BANNERS_DIR="static/img/banners"
 VALID_CATEGORIES=(Essays Thoughts Links AMA)
 DATE_PATTERN='^"?[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(Z|[+-][0-9]{2}:[0-9]{2})"?$'
 
+# Tag taxonomy gates. The craftful pass (see todos/sketch-tag-hygiene.md
+# and the matching arrays in scripts/tag-hygiene.sh) retired these
+# synonyms and placeholders. Reintroducing one on import is almost
+# always a regression -- a forgotten oncall/ops/devops collapse, or a
+# too-generic career/building/pm placeholder. Edit both this list and
+# the one in scripts/tag-hygiene.sh together when the taxonomy evolves.
+BLOCKED_TAGS=(
+    1mb-dev attention building career choices decisions devops drafting
+    ecosystem feed introduction language launch mood oncall ops perfection
+    planning pm policy practice product-design qa radio repo-hygiene
+    scripture sdlc spec tagline
+)
+
+# Brand-new tags an import is allowed to introduce. Empty by default --
+# operators add a tag here to acknowledge "yes I'm adding this to the
+# taxonomy on purpose," then commit + run tag-hygiene.sh to confirm.
+# Without an entry here, any tag not already in articles/ fails import.
+NEW_TAGS_OK=(
+)
+
+TAG_CAP=4   # max tags per article. No minimum -- zero is acceptable
+            # when nothing in the taxonomy genuinely fits.
+
 DRY_RUN=0
 FILTER=all
 TARGET_SLUG=""
@@ -77,6 +100,37 @@ get_first_list_item() {
         }
         found && /^[a-zA-Z]/ { exit }
     ' <<< "$1"
+}
+
+# Return every item from a YAML list block as one-per-line.
+get_list_items() {
+    awk -v key="$2" '
+        $0 ~ "^"key":" { found = 1; next }
+        found && /^[[:space:]]+-/ {
+            sub(/^[[:space:]]+-[[:space:]]*/, "")
+            print
+            next
+        }
+        found && /^[a-zA-Z]/ { exit }
+    ' <<< "$1"
+}
+
+# Build the set of tags already used by articles/*.md once per invocation.
+CURRENT_TAGS_LOADED=0
+CURRENT_TAGS=()
+load_current_tags() {
+    (( CURRENT_TAGS_LOADED == 1 )) && return
+    local f fm tags_block t
+    for f in "$ARTICLES_DIR"/*.md; do
+        [[ -f "$f" ]] || continue
+        fm=$(extract_frontmatter "$f")
+        tags_block=$(get_list_items "$fm" "tags")
+        while IFS= read -r t; do
+            [[ -z "$t" ]] && continue
+            in_array "$t" "${CURRENT_TAGS[@]}" || CURRENT_TAGS+=("$t")
+        done <<< "$tags_block"
+    done
+    CURRENT_TAGS_LOADED=1
 }
 
 in_array() {
@@ -125,6 +179,24 @@ process_entry() {
     first_cat=$(get_first_list_item "$fm" "categories")
     [[ -n "$first_cat" ]] || fail "$slug" "missing required frontmatter: categories"
     in_array "$first_cat" "${VALID_CATEGORIES[@]}" || fail "$slug" "category not in vocabulary (got: $first_cat, allowed: ${VALID_CATEGORIES[*]})"
+
+    # Tag taxonomy gates (see todos/sketch-tag-hygiene.md).
+    local tag_block tags=() t
+    tag_block=$(get_list_items "$fm" "tags")
+    while IFS= read -r t; do
+        [[ -n "$t" ]] && tags+=("$t")
+    done <<< "$tag_block"
+
+    (( ${#tags[@]} <= TAG_CAP )) || fail "$slug" "too many tags: ${#tags[@]} (max $TAG_CAP). Pick the most navigational. Got: ${tags[*]}"
+
+    if (( ${#tags[@]} > 0 )); then
+        load_current_tags
+        for t in "${tags[@]}"; do
+            in_array "$t" "${BLOCKED_TAGS[@]}" && fail "$slug" "tag '$t' is on the dropped-synonym blocklist (see scripts/import-inbox.sh BLOCKED_TAGS for rationale)"
+            in_array "$t" "${CURRENT_TAGS[@]}" || in_array "$t" "${NEW_TAGS_OK[@]}" || \
+                fail "$slug" "tag '$t' is new -- add it to NEW_TAGS_OK in scripts/import-inbox.sh to acknowledge the taxonomy extension, or pick a tag already in the corpus"
+        done
+    fi
 
     local banner_field has_banner_field=0 has_banner_files=0
     banner_field=$(get_scalar "$fm" "banner")
