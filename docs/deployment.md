@@ -45,10 +45,10 @@ The reference deploy uses `log.1mb.dev` (one A record to a single DigitalOcean d
 ## 3. Build the markgo binary
 
 ```sh
-make fetch-markgo MARKGO_REF=v3.14.0 GOOS=linux GOARCH=amd64
+make fetch-markgo GOOS=linux GOARCH=amd64
 ```
 
-This produces `build/markgo` — a static Linux binary with no runtime dependencies.
+This produces `build/markgo` — a static Linux binary with no runtime dependencies. The markgo version is pinned in the Makefile (`MARKGO_REF`); override with `MARKGO_REF=vX.Y.Z` only when you want a different version than the repo ships with.
 
 If you have a local checkout of `1mb-dev/markgo` at a sibling path (`../markgo`), `make fetch-markgo` builds whatever ref is currently checked out there. Otherwise it shallow-clones the requested ref into `build/markgo-src` and builds from that. Set `MARKGO_SRC=` (empty) to force a clean clone even when a sibling exists.
 
@@ -169,8 +169,7 @@ AMA flow (requires `ADMIN_USERNAME`/`ADMIN_PASSWORD` set in `.env`):
 
 - Open the homepage. Tap the FAB on desktop or the bottom-nav `?` button on mobile.
 - Submit a test question. The form solves a math captcha in JS and includes a honeypot field; submission lands in `articles/` as a draft markdown file with `type: ama`.
-- Log in at `/login` with your `ADMIN_*` credentials.
-- Visit `/admin/ama`. The pending question appears in the moderation list.
+- Visit `/admin/ama`. Markgo renders an inline Sign in form on any admin route — enter your `ADMIN_*` credentials there. The pending question appears in the moderation list.
 - Answer or delete. Answering appends `\n\n---\n\n<answer>` to the article and flips `draft: false`; the published Q&A then appears on the home feed.
 
 ## External uptime probe
@@ -235,7 +234,7 @@ Idempotent: rsyncs `articles/` from the VPS into your local clone (additive — 
 
 If you forked this repo to deploy your own blog:
 
-- [ ] Replace `articles/_example.md` with your own writing.
+- [ ] Replace the contents of `articles/` with your own writing.
 - [ ] Edit `.env`: `BASE_URL`, `BLOG_*`, `ABOUT_*`, `ADMIN_*`, `CORS_ALLOWED_ORIGINS`.
 - [ ] Decide on `STATIC_PATH`: leave empty if you have no static overrides; set to `./static` once you drop favicons, OG image, fonts, or theme CSS into `./static/`. Overlay mode falls back to markgo's embedded defaults for everything you didn't replace.
 - [ ] Edit `deploy/log.service.example` if you want to ship `User=` other than `markgo` directly (or just override `DEPLOY_USER` on the `make deploy` command line).
