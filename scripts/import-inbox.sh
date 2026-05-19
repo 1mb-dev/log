@@ -127,7 +127,7 @@ load_current_tags() {
         tags_block=$(get_list_items "$fm" "tags")
         while IFS= read -r t; do
             [[ -z "$t" ]] && continue
-            in_array "$t" "${CURRENT_TAGS[@]}" || CURRENT_TAGS+=("$t")
+            in_array "$t" "${CURRENT_TAGS[@]+"${CURRENT_TAGS[@]}"}" || CURRENT_TAGS+=("$t")
         done <<< "$tags_block"
     done
     CURRENT_TAGS_LOADED=1
@@ -193,7 +193,7 @@ process_entry() {
         load_current_tags
         for t in "${tags[@]}"; do
             in_array "$t" "${BLOCKED_TAGS[@]}" && fail "$slug" "tag '$t' is on the dropped-synonym blocklist (see scripts/import-inbox.sh BLOCKED_TAGS for rationale)"
-            in_array "$t" "${CURRENT_TAGS[@]}" || in_array "$t" "${NEW_TAGS_OK[@]}" || \
+            in_array "$t" "${CURRENT_TAGS[@]+"${CURRENT_TAGS[@]}"}" || in_array "$t" "${NEW_TAGS_OK[@]+"${NEW_TAGS_OK[@]}"}" || \
                 fail "$slug" "tag '$t' is new -- add it to NEW_TAGS_OK in scripts/import-inbox.sh to acknowledge the taxonomy extension, or pick a tag already in the corpus"
         done
     fi
