@@ -93,3 +93,34 @@
     text-decoration-thickness: from-font;
     text-underline-offset: 0.15em;
 }
+
+/* ==========================================================================
+   Tag cloud weighting — opacity tiers by data-count (markgo v3.18.1+).
+   Three buckets keep the pill layout calm; count text stays inline so this
+   is secondary scan-affordance. Hover restores full opacity. Adjust the
+   bracket boundaries if the corpus shape shifts.
+   ========================================================================== */
+
+.tag-cloud-item {
+    transition: border-color var(--transition-fast),
+                background-color var(--transition-fast),
+                box-shadow var(--transition-fast),
+                transform var(--transition-fast),
+                opacity var(--transition-fast);
+}
+
+.tag-cloud-item[data-count="1"],
+.tag-cloud-item[data-count="2"] {
+    opacity: 0.65;
+}
+
+.tag-cloud-item[data-count="3"],
+.tag-cloud-item[data-count="4"],
+.tag-cloud-item[data-count="5"] {
+    opacity: 0.85;
+}
+
+.tag-cloud-item:hover,
+.tag-cloud-item:focus-visible {
+    opacity: 1;
+}
