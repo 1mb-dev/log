@@ -4,9 +4,8 @@ description: Green tests mean the code runs.
 date: "2026-04-17T10:00:00Z"
 tags:
   - craft
-  - testing
   - solo
-  - qa
+  - testing
 categories:
   - Essays
 draft: false

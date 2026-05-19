@@ -3,9 +3,9 @@ title: Playbook
 description: Sketch, review, verify. A /command per step.
 date: "2026-04-26T10:00:00Z"
 tags:
-  - sdlc
+  - craft
+  - discipline
   - engineering
-  - practice
 categories:
   - Links
 draft: false

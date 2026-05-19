@@ -3,8 +3,6 @@ title: Drift
 description: Mood, not genre. Always-on internet radio.
 date: "2026-04-06T10:00:00Z"
 tags:
-  - radio
-  - mood
   - calm-design
 categories:
   - Links

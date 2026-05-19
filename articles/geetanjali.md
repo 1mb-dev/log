@@ -4,8 +4,6 @@ description: Scripture as decision tool. Old text, new index.
 date: "2026-05-08T10:00:00Z"
 tags:
   - ethics
-  - scripture
-  - decisions
 categories:
   - Links
 draft: false

@@ -4,8 +4,6 @@ description: AI policy, generated. Pick a preset, tune, download.
 date: "2026-04-15T10:00:00Z"
 tags:
   - ai
-  - policy
-  - repo-hygiene
 categories:
   - Links
 draft: false

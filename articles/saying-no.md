@@ -4,7 +4,6 @@ description: Building is addition.
 date: "2026-04-28T10:00:00Z"
 tags:
   - philosophy
-  - choices
   - solo
   - discipline
 categories:

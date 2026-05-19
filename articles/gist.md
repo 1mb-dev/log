@@ -3,9 +3,8 @@ title: Gist
 description: Spec first. Stack later.
 date: "2026-04-19T10:00:00Z"
 tags:
-  - spec
-  - planning
   - zero-stack
+  - solo
 categories:
   - Links
 draft: false

@@ -4,7 +4,7 @@ description: No membership.
 date: "2026-01-05T10:00:00Z"
 tags:
   - philosophy
-  - introduction
+  - identity
 categories:
   - Thoughts
 draft: false

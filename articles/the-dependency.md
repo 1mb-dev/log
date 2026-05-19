@@ -3,9 +3,8 @@ title: The Dependency
 description: Your stack runs on people you've never met.
 date: "2026-04-05T10:00:00Z"
 tags:
-  - ecosystem
-  - open-source
   - community
+  - open-source
 categories:
   - Essays
 draft: false

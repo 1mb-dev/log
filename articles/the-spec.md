@@ -3,10 +3,8 @@ title: The Spec
 description: The spec starts as a text file.
 date: "2026-04-07T10:00:00Z"
 tags:
-  - ecosystem
-  - building
   - solo
-  - pm
+  - solo-building
 categories:
   - Essays
 draft: false

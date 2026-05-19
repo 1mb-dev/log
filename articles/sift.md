@@ -3,8 +3,6 @@ title: Sift
 description: A feed with a last page. Study desk, not newsstand.
 date: "2026-04-11T10:00:00Z"
 tags:
-  - feed
-  - attention
   - calm-design
 categories:
   - Links

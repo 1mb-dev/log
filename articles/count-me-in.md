@@ -4,7 +4,7 @@ description: 1mb.
 date: "2026-04-03T10:00:00Z"
 tags:
   - community
-  - 1mb-dev
+  - builders
 categories:
   - Thoughts
 draft: false

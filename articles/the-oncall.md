@@ -4,10 +4,7 @@ description: Solo means the deploy has your phone number.
 date: "2026-05-10T10:00:00Z"
 tags:
   - craft
-  - ops
   - solo
-  - devops
-  - oncall
 categories:
   - Essays
 draft: false

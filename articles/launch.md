@@ -3,8 +3,9 @@ title: Launch
 description: 1mb.
 date: "2026-01-03T10:00:00Z"
 tags:
-  - launch
   - philosophy
+  - identity
+  - solo
 categories:
   - Thoughts
 draft: false

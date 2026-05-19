@@ -4,8 +4,6 @@ description: Draft the message before sending.
 date: "2026-04-22T10:00:00Z"
 tags:
   - communication
-  - drafting
-  - language
 categories:
   - Links
 draft: false
