@@ -95,6 +95,18 @@
 }
 
 /* ==========================================================================
+   Article dek (.article-description). markgo renders the frontmatter
+   description as a lede above the body. Dim to muted + italic so it reads as
+   a standfirst, not a second copy of the opening line. Pairs with the
+   convention that description summarizes the post — it never repeats line one.
+   ========================================================================== */
+
+.article-description {
+    color: var(--color-text-muted);
+    font-style: italic;
+}
+
+/* ==========================================================================
    Tag cloud weighting — opacity tiers by data-count (markgo v3.18.1+).
    Three buckets keep the pill layout calm; count text stays inline so this
    is secondary scan-affordance. Hover restores full opacity. Adjust the
