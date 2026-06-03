@@ -29,7 +29,7 @@
 # pin to any tag or commit and inspect the build line. A curl-based fetch of
 # the published artifacts is a future simplification.
 
-MARKGO_REF   ?= v3.18.1
+MARKGO_REF   ?= v3.19.0
 MARKGO_SRC   ?= ../markgo
 GOOS         ?= linux
 GOARCH       ?= amd64
