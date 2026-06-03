@@ -36,9 +36,9 @@
 #       List pending AMA drafts on the VPS: question, asker, slug, file.
 #
 #   scripts/ama.sh build --from <draft-slug> --slug <new-slug> --answer <file>
-#       Pull the draft, write articles/<new-slug>.md: question + answer,
-#       draft:false, asker_email stripped, slug replaced. --from is optional
-#       when exactly one AMA is pending.
+#       Pull the draft, write articles/<new-slug>.md: question in frontmatter,
+#       answer in the body (markgo v3.20.0 format), draft:false, asker_email
+#       stripped, slug replaced. --from is optional when exactly one AMA pends.
 #
 #   scripts/ama.sh clean-draft --from <draft-slug>
 #       Remove the stale draft on the VPS (guarded: must be type:ama +
@@ -60,6 +60,44 @@ ARTICLES_DIR="$(cd "$(dirname "$0")/.." && pwd)/articles"
 
 fail() { echo "ama: $*" >&2; exit 1; }
 
+# Read the AMA question from frontmatter. markgo v3.20.0 stores it as
+# `question:` (plain, double-quoted, or a YAML block scalar); the body holds the
+# answer. Prints the question as plain text.
+extract_question() {
+    awk '
+        NR==1 && $0=="---" { infm=1; next }
+        infm && !inblock && $0=="---" { exit }
+        inblock {
+            if ($0 ~ /^[^ \t]/) exit                 # next key at col 0 ends the block
+            line=$0; sub(/^[ \t]+/,"",line); print line; next
+        }
+        infm && $0 ~ /^question:[ \t]*[|>][-+0-9]*[ \t]*$/ { inblock=1; next }
+        infm && $0 ~ /^question:[ \t]*/ {
+            v=$0; sub(/^question:[ \t]*/,"",v)
+            if (v ~ /^".*"$/)        { v=substr(v,2,length(v)-2); gsub(/\\n/,"\n",v); gsub(/\\"/,"\"",v) }
+            else if (v ~ /^'\''.*'\''$/) { v=substr(v,2,length(v)-2) }
+            print v; exit
+        }
+    ' <<< "$1"
+}
+
+# Emit `question: <value>` as valid YAML — plain when safe (matching markgo's own
+# yaml.v3 output), double-quoted when the value would otherwise mis-parse.
+emit_question() {
+    local s="$1" first="${1:0:1}" q quote=0
+    [[ -z "$s" ]] && quote=1
+    [[ "$s" == *$'\n'* ]] && quote=1
+    [[ "$s" != "${s#[[:space:]]}" || "$s" != "${s%[[:space:]]}" ]] && quote=1
+    [[ "$s" == *": "* || "$s" == *" #"* ]] && quote=1
+    case "$first" in '!'|'&'|'*'|'?'|'|'|'>'|'%'|'@'|'`'|'"'|"'"|'#'|','|'['|']'|'{'|'}'|':'|'-'|' ') quote=1 ;; esac
+    if (( quote )); then
+        q=${s//\\/\\\\}; q=${q//\"/\\\"}; q=${q//$'\n'/\\n}
+        printf 'question: "%s"\n' "$q"
+    else
+        printf 'question: %s\n' "$s"
+    fi
+}
+
 # Remote: print "slug<TAB>file" for every pending (draft:true) AMA.
 remote_pending() {
     ssh "$SSH_TARGET" "cd '$REMOTE_ARTICLES' && \
@@ -80,7 +118,7 @@ cmd_list() {
         local body asker
         body=$(ssh "$SSH_TARGET" "cat '$REMOTE_ARTICLES/${file#./}'")
         asker=$(awk -F': ' '/^asker:/{print $2; exit}' <<< "$body")
-        local q; q=$(awk '/^---$/{c++; next} c>=2 && NF {print; exit}' <<< "$body")
+        local q; q=$(extract_question "$body")
         printf "  slug:   %s\n  asker:  %s\n  q:      %s\n  file:   %s\n\n" \
             "$slug" "${asker:-(none)}" "$q" "${file#./}"
     done <<< "$rows"
@@ -125,10 +163,8 @@ cmd_build() {
     asker=$(awk '/^asker:/{sub(/^asker:[[:space:]]*/,""); print; exit}'   <<< "$draft")
     author=$(awk '/^author:/{sub(/^author:[[:space:]]*/,""); print; exit}' <<< "$draft")
     date=$(awk '/^date:/{sub(/^date:[[:space:]]*/,""); print; exit}' <<< "$draft")
-    # Whole question body, not just line one -- AMA questions can be multi-line.
-    # Skip leading blanks, keep everything after; $() trims trailing newlines.
-    question=$(awk '/^---$/{c++; next} c<2{next} NF{p=1} p{print}' <<< "$draft")
-    [[ -n "$question" ]] || fail "could not read question from draft"
+    question=$(extract_question "$draft")
+    [[ -n "$question" ]] || fail "could not read question from draft frontmatter"
 
     {
         echo "---"
@@ -136,12 +172,9 @@ cmd_build() {
         [[ -n "$author" ]] && echo "author: $author"
         [[ -n "$date" ]]   && echo "date: $date"
         echo "draft: false"
+        emit_question "$question"
         echo "slug: $new_slug"
         echo "type: ama"
-        echo "---"
-        echo ""
-        echo "$question"
-        echo ""
         echo "---"
         echo ""
         cat "$answer_file"
