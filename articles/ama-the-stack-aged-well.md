@@ -3,12 +3,9 @@ asker: Hemant
 author: 1mb.dev
 date: "2026-06-03T05:02:00Z"
 draft: false
+question: Which decision looked wrong when you made it, but aged exceptionally well?
 slug: ama-the-stack-aged-well
 type: ama
----
-
-Which decision looked wrong when you made it, but aged exceptionally well?
-
 ---
 
 The decision: markdown files in a git repo, served by one binary. No database. No framework.
