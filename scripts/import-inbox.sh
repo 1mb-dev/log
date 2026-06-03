@@ -25,6 +25,9 @@
 
 set -euo pipefail
 
+# Run from the repo root regardless of invocation dir (paths below are relative).
+cd "$(dirname "$0")/.."
+
 INBOX_DIR="inbox"
 ARTICLES_DIR="articles"
 BANNERS_DIR="static/img/banners"
@@ -64,7 +67,7 @@ for arg in "$@"; do
         --dry-run)     DRY_RUN=1 ;;
         --text-only)   FILTER=text ;;
         --banner-only) FILTER=banner ;;
-        --help|-h)     sed -n '2,24p' "$0" | sed 's/^# \?//' ; exit 0 ;;
+        --help|-h)     sed -n '2,24p' "$0" | sed -e 's/^# //' -e 's/^#//' ; exit 0 ;;
         --*)           echo "unknown flag: $arg" >&2 ; exit 2 ;;
         *)             TARGET_SLUG="$arg" ;;
     esac

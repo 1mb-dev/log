@@ -30,7 +30,7 @@ for arg in "$@"; do
         --quiet) QUIET=1 ;;
         --json)  JSON=1 ;;
         --help|-h)
-            sed -n '2,21p' "$0" | sed 's/^# \?//'
+            sed -n '2,21p' "$0" | sed -e 's/^# //' -e 's/^#//'
             exit 0
             ;;
         *) echo "unknown flag: $arg" >&2; exit 2 ;;
