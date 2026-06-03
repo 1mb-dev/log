@@ -1,6 +1,6 @@
 ---
 title: Sift
-description: A feed with a last page. Study desk, not newsstand.
+description: "A reading feed built like a study desk, not a newsstand."
 date: "2026-04-11T10:00:00Z"
 tags:
   - calm-design

@@ -1,6 +1,6 @@
 ---
 title: Solo Vs Alone
-description: Solo isn't the same as alone.
+description: "Owning the outcome isn't the same as having no one there."
 date: "2026-03-18T10:00:00Z"
 tags:
   - contrasts

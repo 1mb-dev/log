@@ -1,6 +1,6 @@
 ---
 title: The Readme
-description: 1am.
+description: "Why the one file written for a human keeps getting skipped — and who pays for it later."
 date: "2026-06-03T10:00:00Z"
 tags:
   - craft

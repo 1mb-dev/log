@@ -1,6 +1,6 @@
 ---
 title: Geetanjali
-description: Scripture as decision tool. Old text, new index.
+description: "An index that turns old scripture into a decision tool."
 date: "2026-05-08T10:00:00Z"
 tags:
   - ethics

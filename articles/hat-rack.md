@@ -1,6 +1,6 @@
 ---
 title: Hat Rack
-description: PM wrote the spec.
+description: "Every role on the org chart, worn by one head."
 date: "2026-01-07T10:00:00Z"
 tags:
   - observations

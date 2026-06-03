@@ -1,6 +1,6 @@
 ---
 title: Saying No
-description: Building is addition.
+description: "The rejected list — features declined, integrations passed on — is most of the actual work."
 date: "2026-04-28T10:00:00Z"
 tags:
   - philosophy

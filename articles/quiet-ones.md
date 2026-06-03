@@ -1,6 +1,6 @@
 ---
 title: Quiet Ones
-description: The loudest builders have the most followers.
+description: "Followers or commits — and who ships on Friday night anyway."
 date: "2026-02-27T10:00:00Z"
 tags:
   - observations

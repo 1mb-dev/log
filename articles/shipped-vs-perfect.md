@@ -1,6 +1,6 @@
 ---
 title: Shipped Vs Perfect
-description: The best version is still in your head.
+description: "Why the imperfect version that's live beats the perfect one still in your head."
 date: "2026-01-20T10:00:00Z"
 tags:
   - contrasts

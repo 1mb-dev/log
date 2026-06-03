@@ -1,6 +1,6 @@
 ---
 title: Accountability
-description: Accountability sounds like a corporate value.
+description: "What the corporate word means with no one else to point at."
 date: "2026-02-09T10:00:00Z"
 tags:
   - mindset

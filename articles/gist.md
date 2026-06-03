@@ -1,6 +1,6 @@
 ---
 title: Gist
-description: Spec first. Stack later.
+description: "Describe an idea, walk away with a deploy-ready zero-stack spec."
 date: "2026-04-19T10:00:00Z"
 tags:
   - zero-stack

@@ -1,6 +1,6 @@
 ---
 title: Cleartalk
-description: Draft the message before sending.
+description: "A case for drafting the hard message before you send it."
 date: "2026-04-22T10:00:00Z"
 tags:
   - communication

@@ -1,6 +1,6 @@
 ---
 title: No One To Blame
-description: The blockers disappear when you're solo.
+description: "Solo removes every excuse. What's left is uncomfortable and clear."
 date: "2026-01-16T10:00:00Z"
 tags:
   - reality

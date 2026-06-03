@@ -1,6 +1,6 @@
 ---
 title: The Spec
-description: The spec starts as a text file.
+description: "Wearing the PM hat solo: arguing with the only person who can override the spec."
 date: "2026-04-07T10:00:00Z"
 tags:
   - solo

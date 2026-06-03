@@ -1,6 +1,6 @@
 ---
 title: Friday Night
-description: Friday night.
+description: "Shipping with no one watching — temperament, not discipline."
 date: "2026-02-27T10:00:00Z"
 tags:
   - reality

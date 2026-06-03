@@ -1,6 +1,6 @@
 ---
 title: Recognition
-description: To the ones building during nap time.
+description: "For the ones building in the margins of the day. Solo, not alone."
 date: "2026-03-13T10:00:00Z"
 tags:
   - community

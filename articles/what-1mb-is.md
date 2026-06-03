@@ -1,6 +1,6 @@
 ---
 title: What 1MB Is
-description: No membership.
+description: "Not a membership. Two questions about how you build."
 date: "2026-01-05T10:00:00Z"
 tags:
   - philosophy

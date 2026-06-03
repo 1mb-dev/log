@@ -1,6 +1,6 @@
 ---
 title: The Dependency
-description: Your stack runs on people you've never met.
+description: "The unpaid, uncoordinated, one-person libraries holding up every production system."
 date: "2026-04-05T10:00:00Z"
 tags:
   - community

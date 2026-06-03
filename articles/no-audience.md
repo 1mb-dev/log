@@ -1,6 +1,6 @@
 ---
 title: No Audience
-description: No followers.
+description: "Shipping with no followers and no newsletter is still building."
 date: "2026-03-11T10:00:00Z"
 tags:
   - community

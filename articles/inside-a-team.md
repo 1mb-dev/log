@@ -1,6 +1,6 @@
 ---
 title: Inside A Team
-description: 1mb isn't about being solo.
+description: "The one-man-band stance has nothing to do with team size."
 date: "2026-01-12T10:00:00Z"
 tags:
   - mindset

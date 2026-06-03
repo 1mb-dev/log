@@ -1,6 +1,6 @@
 ---
 title: Scope
-description: Scope creep isn't a project management problem.
+description: "Scope creep is a clarity problem. Solo, you learn to say no yourself."
 date: "2026-02-18T10:00:00Z"
 tags:
   - observations

@@ -1,6 +1,6 @@
 ---
 title: Permission
-description: Waiting for approval is comfortable.
+description: "Approval builds safety. Shipping builds the things that exist."
 date: "2026-02-16T10:00:00Z"
 tags:
   - observations

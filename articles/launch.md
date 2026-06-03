@@ -1,6 +1,6 @@
 ---
 title: Launch
-description: 1mb.
+description: "A quiet corner for the ones who build without teams or titles."
 date: "2026-01-03T10:00:00Z"
 tags:
   - philosophy

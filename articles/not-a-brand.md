@@ -1,6 +1,6 @@
 ---
 title: Not A Brand
-description: 1mb doesn't sell anything.
+description: "No courses, no coaching, no community tier — and why that's enough."
 date: "2026-03-27T10:00:00Z"
 tags:
   - philosophy

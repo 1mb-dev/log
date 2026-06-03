@@ -1,6 +1,6 @@
 ---
 title: The Oncall
-description: Solo means the deploy has your phone number.
+description: "Ship fast, get paged at 3am: the engineer and the ops hat are the same person, six months apart."
 date: "2026-05-10T10:00:00Z"
 tags:
   - craft

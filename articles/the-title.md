@@ -1,6 +1,6 @@
 ---
 title: The Title
-description: '"What''s your title?'
+description: "Your real title is the work you do, not the label HR assigned."
 date: "2026-01-14T10:00:00Z"
 tags:
   - definitions

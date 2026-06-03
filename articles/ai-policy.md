@@ -1,6 +1,6 @@
 ---
 title: AI Policy
-description: AI policy, generated. Pick a preset, tune, download.
+description: "A generator for AI-use policy: pick a preset, tune, download."
 date: "2026-04-15T10:00:00Z"
 tags:
   - ai

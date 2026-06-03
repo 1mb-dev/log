@@ -1,9 +1,6 @@
 ---
 title: Keep Building
-description: |-
-  keep building
-
-  Not "hustle harder.
+description: "Persistence, minus the hustle-culture slogans."
 date: "2026-03-27T10:00:00Z"
 tags:
   - philosophy

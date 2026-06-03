@@ -1,6 +1,6 @@
 ---
 title: End To End
-description: '"End-to-end ownership" sounds corporate.'
+description: "The corporate phrase, translated: no handoffs, no blame, just outcomes."
 date: "2026-01-09T10:00:00Z"
 tags:
   - definitions

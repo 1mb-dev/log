@@ -1,6 +1,6 @@
 ---
 title: Count Me In
-description: 1mb.
+description: "A counter with no emails, no newsletter, no funnel behind it."
 date: "2026-04-03T10:00:00Z"
 tags:
   - community

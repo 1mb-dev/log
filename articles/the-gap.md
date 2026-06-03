@@ -1,6 +1,6 @@
 ---
 title: The Gap
-description: Career gaps get explained.
+description: "The résumé gap was never the problem. Stopping was."
 date: "2026-03-07T10:00:00Z"
 tags:
   - mindset

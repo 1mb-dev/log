@@ -1,6 +1,6 @@
 ---
 title: Test Your Own Work
-description: Green tests mean the code runs.
+description: "Breaking your own work before anyone else does: the half of shipping nobody teaches."
 date: "2026-04-17T10:00:00Z"
 tags:
   - craft

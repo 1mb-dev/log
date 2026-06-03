@@ -1,6 +1,6 @@
 ---
 title: Team Size
-description: '"How big is your team?'
+description: "A team of one isn't a team. It's a way of working."
 date: "2026-03-04T10:00:00Z"
 tags:
   - definitions

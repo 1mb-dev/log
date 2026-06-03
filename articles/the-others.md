@@ -1,6 +1,6 @@
 ---
 title: The Others
-description: Some build with teams, titles, and backing.
+description: "No budget, no roadmap, same standards. For the ones who just build."
 date: "2026-03-20T10:00:00Z"
 tags:
   - contrasts

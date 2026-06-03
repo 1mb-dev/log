@@ -1,6 +1,6 @@
 ---
 title: The Graveyard
-description: A folder labeled "old." A bookmark to a defunct subdomain.
+description: "Every builder's folder of dead projects: not failures, but decisions."
 date: "2026-05-19T10:00:00Z"
 tags:
   - philosophy
