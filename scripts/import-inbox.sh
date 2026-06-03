@@ -115,6 +115,27 @@ get_list_items() {
     ' <<< "$1"
 }
 
+# First non-empty line of the article body (after the frontmatter).
+get_body_first_line() {
+    awk '/^---$/{c++; next} c>=2 && NF { sub(/^[[:space:]]+/, ""); print; exit }' "$1"
+}
+
+# First text line of the description field. Handles a plain scalar and a
+# block scalar (description: |- followed by indented lines).
+get_description_first_line() {
+    awk '
+        /^---$/ { c++; next }
+        c==1 && /^description:/ {
+            v = $0; sub(/^description:[[:space:]]*/, "", v)
+            if (v ~ /^[|>]/) { block = 1; next }
+            gsub(/^["'\'']|["'\'']$/, "", v); print v; exit
+        }
+        c==1 && block && /^[[:space:]]+[^[:space:]]/ { sub(/^[[:space:]]+/, ""); print; exit }
+        c==1 && block && /^[A-Za-z]/ { exit }
+        c>=2 { exit }
+    ' "$1"
+}
+
 # Build the set of tags already used by articles/*.md once per invocation.
 CURRENT_TAGS_LOADED=0
 CURRENT_TAGS=()
@@ -155,16 +176,16 @@ process_entry() {
     fm=$(extract_frontmatter "$md_file")
     [[ -n "$fm" ]] || fail "$slug" "frontmatter empty or unterminated"
 
-    local title description date draft
+    local title date draft
     title=$(get_scalar "$fm" "title")
-    description=$(get_scalar "$fm" "description")
     date=$(get_scalar "$fm" "date")
     draft=$(get_scalar "$fm" "draft")
 
-    [[ -n "$title" ]]       || fail "$slug" "missing required frontmatter: title"
-    [[ -n "$description" ]] || fail "$slug" "missing required frontmatter: description"
-    [[ -n "$date" ]]        || fail "$slug" "missing required frontmatter: date"
-    [[ -n "$draft" ]]       || fail "$slug" "missing required frontmatter: draft"
+    [[ -n "$title" ]] || fail "$slug" "missing required frontmatter: title"
+    [[ -n "$date" ]]  || fail "$slug" "missing required frontmatter: date"
+    [[ -n "$draft" ]] || fail "$slug" "missing required frontmatter: draft"
+    # description is optional: omit it and markgo auto-excerpts the body for
+    # meta/OG/RSS. If present, it must not just echo the opening line (gate below).
 
     [[ "$date" =~ $DATE_PATTERN ]] || fail "$slug" "date not RFC3339: $date"
     [[ "$draft" == "false" ]]      || fail "$slug" "draft must be false (got: $draft)"
@@ -174,6 +195,18 @@ process_entry() {
     local body_first
     body_first=$(awk '/^---$/{c++; next} c==2 && /^[^[:space:]]/{print; exit}' "$md_file")
     [[ "$body_first" =~ ^"# " ]] && fail "$slug" "body begins with '# ' heading (would duplicate title)"
+
+    # Description gate: a present description must summarize the post, not echo
+    # the opening line. On essays it renders as the visible dek above the body;
+    # on every type it drives meta/OG/RSS/search. A verbatim repeat of line one
+    # is the dek-repeats-lede anti-pattern (2026-06-03 description sweep).
+    local desc_first open_first dn bn
+    desc_first=$(get_description_first_line "$md_file")
+    open_first=$(get_body_first_line "$md_file")
+    dn=${#desc_first}; bn=${#open_first}
+    if (( dn > 0 && bn > 0 )) && { [[ "${open_first:0:dn}" == "$desc_first" ]] || [[ "${desc_first:0:bn}" == "$open_first" ]]; }; then
+        fail "$slug" "description repeats the opening line (\"$desc_first\"). Summarize the post instead, or omit the description field (markgo auto-excerpts the body for meta/OG/RSS)."
+    fi
 
     local first_cat
     first_cat=$(get_first_list_item "$fm" "categories")
