@@ -115,7 +115,7 @@ log.1mb.dev {
 }
 ```
 
-Because Caddy fronts markgo, set `TRUSTED_PROXIES` in `.env` (markgo v3.22.0+) so rate limiting keys on the real client IP and not on Caddy's loopback address — otherwise every visitor shares one bucket and a single abuser trips the limit for everyone. For this same-host topology that's `TRUSTED_PROXIES=127.0.0.1`. Behind Cloudflare, list the full chain (Cloudflare ranges + your Caddy host); markgo warns at startup if the trust still collapses to a public edge IP.
+markgo auto-trusts loopback for rate-limit keying (v3.22.5+), so this same-host Caddy → `127.0.0.1` topology keys on the real client with no extra config — leave `TRUSTED_PROXIES` unset. Set it only for an off-host proxy (a separate proxy machine, or Cloudflare → Caddy): list the full proxy chain, else the limiter collapses every visitor onto that proxy's IP and the per-client limits go global. markgo logs the keying posture at boot (`trusted_proxies_source=loopback-default|explicit`).
 
 Two install paths depending on what's already on the VPS:
 
