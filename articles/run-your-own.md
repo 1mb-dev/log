@@ -2,6 +2,7 @@
 title: Run your own?
 description: One builder's log. Markdown in git, a Go binary, Caddy in front.
 type: page
+date: 2026-05-17
 draft: false
 ---
 
