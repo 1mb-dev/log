@@ -72,6 +72,7 @@ Required edits:
 Leave these as-is unless you have a reason:
 
 - `STATIC_PATH=` (empty) — markgo's static handler is **overlay mode** (since v3.10.2): setting `STATIC_PATH=./static` serves your override files first, falls back to markgo's embedded defaults for everything else. No mirror needed. Leave empty if you have no overrides; set to `./static` once you drop favicons, OG images, fonts, or theme CSS into `./static/`.
+- `FONT_PRELOAD_URL` (markgo v3.24.1+) — the body font preloaded in `<head>`, defaulting to embedded Inter. If you overlay `css/fonts.css` to swap the body font, repoint this at your face (the `@font-face` src) so the preload follows the swap — otherwise every page preloads a font it never renders. Empty disables it; markgo warns at startup if it doesn't resolve.
 - `EMAIL_HOST=` (empty) — disables the contact form. AMA doesn't use SMTP; submissions land in markgo's moderation queue on disk.
 
 Now deploy:
