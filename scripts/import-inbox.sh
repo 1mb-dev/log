@@ -53,6 +53,7 @@ BLOCKED_TAGS=(
 # taxonomy on purpose," then commit + run tag-hygiene.sh to confirm.
 # Without an entry here, any tag not already in articles/ fails import.
 NEW_TAGS_OK=(
+    dependencies
 )
 
 TAG_CAP=4   # max tags per article. No minimum -- zero is acceptable
