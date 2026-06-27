@@ -138,16 +138,17 @@
 }
 
 /* ==========================================================================
-   Single-row nav: feed filter bar + site footer link row. Space Mono is
-   wide enough that the 5-6 link labels wrap aggressively on narrow screens.
-   Keep them in one row — remove v3.27.0 flex-wrap on feed-filters and
-   mirror the preference on footer-nav. Adjust to taste when forking.
+   Feed filter row — single line, horizontally scrollable when it overflows.
+   v3.27.0 added flex-wrap so the pills wrap on narrow screens; for this
+   corpus the 5 pills in Space Mono fit most viewports, and a short
+   independent scroll row is better UX than a wrapped second line.
+   overflow-x: auto contains the scroll inside the nav — the page never
+   scrolls horizontally. Adjust to taste when forking.
    ========================================================================== */
 
 .feed-filters {
     flex-wrap: nowrap;
-}
-
-.footer-nav {
-    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    min-width: 0; /* override flex container auto-minimum — prevent page scroll */
 }
