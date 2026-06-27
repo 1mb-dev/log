@@ -136,3 +136,18 @@
 .tag-cloud-item:focus-visible {
     opacity: 1;
 }
+
+/* ==========================================================================
+   Single-row nav: feed filter bar + site footer link row. Space Mono is
+   wide enough that the 5-6 link labels wrap aggressively on narrow screens.
+   Keep them in one row — remove v3.27.0 flex-wrap on feed-filters and
+   mirror the preference on footer-nav. Adjust to taste when forking.
+   ========================================================================== */
+
+.feed-filters {
+    flex-wrap: nowrap;
+}
+
+.footer-nav {
+    flex-wrap: nowrap;
+}
