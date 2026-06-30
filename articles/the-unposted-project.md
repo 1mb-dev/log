@@ -9,6 +9,7 @@ tags:
 categories:
   - Thoughts
 draft: false
+type: thought
 ---
 
 No one announced this project.
