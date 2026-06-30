@@ -54,6 +54,7 @@ BLOCKED_TAGS=(
 # Without an entry here, any tag not already in articles/ fails import.
 NEW_TAGS_OK=(
     dependencies
+    discovery
 )
 
 TAG_CAP=4   # max tags per article. No minimum -- zero is acceptable
