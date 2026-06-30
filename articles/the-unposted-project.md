@@ -7,9 +7,8 @@ tags:
   - discovery
   - solo
 categories:
-  - Essays
+  - Thoughts
 draft: false
-banner: /static/img/banners/the-unposted-project.png
 ---
 
 No one announced this project.
