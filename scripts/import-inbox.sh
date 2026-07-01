@@ -219,6 +219,16 @@ process_entry() {
     in_array "$first_cat" "${VALID_CATEGORIES[@]}" || fail "$slug" "category not in vocabulary (got: $first_cat, allowed: ${VALID_CATEGORIES[*]})"
 
     # Tag taxonomy gates (see todos/sketch-tag-hygiene.md).
+
+    # type frontmatter drives card shape in markgo. categories: Thoughts alone
+    # renders an article-card (linked title); type: thought renders the full-body
+    # thought card. Gate on the mismatch so the operator doesn't find out from the
+    # live card shape after deploy. (2026-07-02, from "The Unposted Project" import.)
+    local post_type
+    post_type=$(get_scalar "$fm" "type")
+    if [[ "$first_cat" == "Thoughts" && "$post_type" != "thought" ]]; then
+        fail "$slug" "type must be 'thought' when categories is Thoughts (got: ${post_type:-<unset>}). Set 'type: thought' in frontmatter."
+    fi
     local tag_block tags=() t
     tag_block=$(get_list_items "$fm" "tags")
     while IFS= read -r t; do
