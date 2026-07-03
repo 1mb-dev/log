@@ -67,7 +67,7 @@ BLOCKED_TAGS = {
     "scripture", "sdlc", "spec", "tagline",
 }
 
-# The 26-tag baseline from the craftful pass.
+# The 28-tag baseline (26 from craftful pass + dependencies + consistency).
 CANONICAL_TAGS = {
     # 18 multi-article (load-bearing navigation)
     "philosophy", "solo", "community", "shipping", "observations", "builders",
@@ -77,6 +77,8 @@ CANONICAL_TAGS = {
     # 8 promoted singletons (deliberate growth bets)
     "ai", "communication", "design", "engineering", "ethics", "open-source",
     "testing", "zero-stack",
+    # post-baseline additions
+    "dependencies", "consistency",
 }
 
 # Singletons by deliberate design vs. by accident.
