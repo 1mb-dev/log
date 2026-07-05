@@ -256,15 +256,16 @@ process_entry() {
     fi
 
     if [[ -f "$banner_png" ]]; then
-        has_banner_files=1
-        [[ -s "$banner_png" ]] || fail "$slug" "banner.png is empty"
+        if (( has_banner_field == 0 )); then
+            echo "  [skip] banner.png in $slug/ has no frontmatter banner field — leftover from prior draft, ignored" >&2
+        else
+            has_banner_files=1
+            [[ -s "$banner_png" ]] || fail "$slug" "banner.png is empty"
+        fi
     fi
 
     if (( has_banner_field == 1 && has_banner_files == 0 )); then
-        fail "$slug" "frontmatter declares banner: $banner_field, but banner.png/banner.html missing"
-    fi
-    if (( has_banner_field == 0 && has_banner_files == 1 )); then
-        fail "$slug" "banner.png/banner.html present but frontmatter has no banner field"
+        fail "$slug" "frontmatter declares banner: $banner_field, but banner.png missing"
     fi
 
     local kind=text
