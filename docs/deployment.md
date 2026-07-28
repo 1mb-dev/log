@@ -159,7 +159,9 @@ Run the smoke-test script:
 scripts/verify-deploy.sh your.domain.example
 ```
 
-It checks `/health`, `/feed.xml`, `/sitemap.xml`, `/robots.txt`, `/manifest.json`, and the HSTS header. Probes use `GET` with `curl -f` — fatal on any 4xx/5xx response on the first probed endpoint.
+It checks `/health`, `/feed.xml`, `/sitemap.xml`, `/robots.txt`, `/manifest.json`, and the HSTS header, and exits non-zero on the first failure with the HTTP status it saw.
+
+`/health` is retried with backoff (5 attempts, ~10s total) because markgo needs a moment to bind after `systemctl restart` — without it a healthy deploy reports a false 502. Only `000`/`502`/`503`/`504` are retried; any other status means the process is answering and misconfigured, so the script fails immediately. Raise `HEALTH_ATTEMPTS` (and `HEALTH_TIMEOUT`) on a slower host.
 
 Browser checks worth doing once:
 

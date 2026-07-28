@@ -116,7 +116,6 @@ deploy: confirm-env build ## Deploy to DOMAIN: push binary + content + .env, ins
 	  systemctl is-active $(SERVICE_NAME) >/dev/null && \
 	  rm -rf /tmp/$(SERVICE_NAME)-bundle"
 	@echo "==> Verify"
-	@sleep 2
 	@./scripts/verify-deploy.sh $(DOMAIN)
 
 verify: ## Run smoke tests against DOMAIN
