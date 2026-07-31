@@ -159,9 +159,19 @@ Run the smoke-test script:
 scripts/verify-deploy.sh your.domain.example
 ```
 
-It checks `/health`, `/feed.xml`, `/sitemap.xml`, `/robots.txt`, `/manifest.json`, and the HSTS header, and exits non-zero on the first failure with the HTTP status it saw.
+It checks `/health`, `/feed.xml`, `/sitemap.xml`, `/robots.txt`, `/manifest.json`, the HSTS header, and the TLS handshake + certificate, and exits non-zero on the first failure with the HTTP status it saw.
 
 `/health` is retried with backoff (5 attempts, ~10s total) because markgo needs a moment to bind after `systemctl restart` — without it a healthy deploy reports a false 502. Only `000`/`502`/`503`/`504` are retried; any other status means the process is answering and misconfigured, so the script fails immediately. Raise `HEALTH_ATTEMPTS` (and `HEALTH_TIMEOUT`) on a slower host.
+
+The TLS check also runs standalone:
+
+```bash
+scripts/check-tls.sh your.domain.example
+```
+
+It verifies the handshake, that the certificate covers the name you asked for, and that it is not expiring within `TLS_MIN_DAYS` (default 14 — Let's Encrypt renews at 30 days left, so 14 means renewal has had two weeks and has not worked). Failures name the specific cause rather than a bare curl error: a missing vhost, an unresolvable name, and a cert that will not verify are three different problems.
+
+Worth knowing what this does *not* cover: it runs when you run it. A reverse-proxy vhost can stop being served without anything in this repo changing — on Caddy v2, editing a *different* site's config is enough, since it does not auto-load `conf.d/` the way nginx loads `sites-enabled/`. Catching that needs something polling between deploys; see below.
 
 Browser checks worth doing once:
 
@@ -180,6 +190,18 @@ AMA flow (requires `ADMIN_USERNAME`/`ADMIN_PASSWORD` set in `.env`):
 ## External uptime probe
 
 The reference deploy uses UptimeRobot to poll `/health` every 5 minutes and alert on non-200. Configured operator-side (account, monitor, alert channel); not codified in this repo. For your fork: any pull-mode probe service pointed at `/health` works — markgo's endpoint returns `200` only when the binary is up and serving.
+
+Point the probe at `https://` and at the **hostname**, not the origin IP. A probe that skips TLS, or that connects by IP, keeps returning `200` through exactly the failure this catches — the certificate or vhost going away while the binary behind it stays perfectly healthy.
+
+Verify the alert path itself, not just the monitor: pause the service briefly and confirm the alert actually arrives where you will see it. An unwatched channel and no monitor at all produce the same outcome during an incident.
+
+`scripts/check-tls.sh` can serve as a cron-side probe where a hosted service is unwanted — it exits non-zero with a specific reason, so any cron that mails non-empty output works:
+
+```cron
+*/15 * * * * /path/to/log/scripts/check-tls.sh your.domain.example
+```
+
+Run it from somewhere that is not the host being checked. On the VPS itself it cannot report a failure that takes the VPS with it.
 
 ## Reading access logs
 

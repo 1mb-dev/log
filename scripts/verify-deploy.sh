@@ -82,4 +82,11 @@ if ! curl -fsS -D - -o /dev/null "$BASE/" | grep -qi '^strict-transport-security
 fi
 echo "  ok  hsts header"
 
+# TLS handshake + certificate. The probes above all ride HTTPS, so a broken
+# handshake would already have failed them -- this adds the checks they cannot
+# make (which names the cert covers, how long it has left) and reports the
+# specific failure instead of a bare curl error. Run it standalone from cron to
+# catch a vhost dropping out between deploys; see docs/deployment.md.
+"$(dirname "$0")/check-tls.sh" "$DOMAIN"
+
 echo "ok: $DOMAIN"
