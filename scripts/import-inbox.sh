@@ -126,6 +126,39 @@ get_body_first_line() {
     awk '/^---$/{c++; next} c>=2 && NF { sub(/^[[:space:]]+/, ""); print; exit }' "$1"
 }
 
+# Last N non-empty body lines, last first. N=2 because posts here often land on
+# a short couplet, and a dek can merge both into one sentence -- checking only
+# the final line misses that (2026-07-31: a dek opened with the second-to-last
+# line and read straight through the last one).
+get_body_last_lines() {
+    awk -v want="${2:-2}" '
+        /^---$/ { c++; next }
+        c>=2 && NF { sub(/^[[:space:]]+/, ""); buf[++n]=$0 }
+        END { for (i = n; i > 0 && i > n - want; i--) print buf[i] }
+    ' "$1"
+}
+
+# Lowercase, and collapse every run of non-alphanumerics to one space. Compared
+# raw, an echo escapes the gate on trailing punctuation alone -- a dek quoting a
+# sentence then continuing ("...on schedule, and nobody notices") diverges from
+# the body at ',' vs '.'. That is the usual shape of the defect, not an edge case.
+normalize_line() {
+    printf '%s' "$1" | tr '[:upper:]' '[:lower:]' \
+        | sed 's/[^a-z0-9][^a-z0-9]*/ /g; s/^ //; s/ $//'
+}
+
+# True when either normalized line is a prefix of the other. The shared run must
+# clear MIN_ECHO_CHARS so a terse closer ("Ship it.") cannot collide with an
+# unrelated dek that happens to open the same way.
+MIN_ECHO_CHARS=24
+lines_overlap() {
+    local a b an bn
+    a=$(normalize_line "$1"); b=$(normalize_line "$2")
+    an=${#a}; bn=${#b}
+    (( an >= MIN_ECHO_CHARS && bn >= MIN_ECHO_CHARS )) || return 1
+    [[ "${b:0:$an}" == "$a" || "${a:0:$bn}" == "$b" ]]
+}
+
 # First text line of the description field. Handles a plain scalar and a
 # block scalar (description: |- followed by indented lines).
 get_description_first_line() {
@@ -203,16 +236,22 @@ process_entry() {
     [[ "$body_first" =~ ^"# " ]] && fail "$slug" "body begins with '# ' heading (would duplicate title)"
 
     # Description gate: a present description must summarize the post, not echo
-    # the opening line. On essays it renders as the visible dek above the body;
-    # on every type it drives meta/OG/RSS/search. A verbatim repeat of line one
-    # is the dek-repeats-lede anti-pattern (2026-06-03 description sweep).
-    local desc_first open_first dn bn
+    # it back. On essays it renders as the visible dek above the body; on every
+    # type it drives meta/OG/RSS/search. Repeating line one is the
+    # dek-repeats-lede anti-pattern (2026-06-03 description sweep); repeating
+    # the ending is worse, since the dek is read before the reader gets there.
+    local desc_first open_first close_line
     desc_first=$(get_description_first_line "$md_file")
     open_first=$(get_body_first_line "$md_file")
-    dn=${#desc_first}; bn=${#open_first}
-    if (( dn > 0 && bn > 0 )) && { [[ "${open_first:0:dn}" == "$desc_first" ]] || [[ "${desc_first:0:bn}" == "$open_first" ]]; }; then
+    if lines_overlap "$desc_first" "$open_first"; then
         fail "$slug" "description repeats the opening line (\"$desc_first\"). Summarize the post instead, or omit the description field (markgo auto-excerpts the body for meta/OG/RSS)."
     fi
+    while IFS= read -r close_line; do
+        [[ "$close_line" == "$open_first" ]] && continue   # single-line body: already gated above
+        if lines_overlap "$desc_first" "$close_line"; then
+            fail "$slug" "description repeats the closing line (\"$close_line\"). The dek is read before the ending is -- summarize the post instead, or omit the description field."
+        fi
+    done < <(get_body_last_lines "$md_file" 2)
 
     local first_cat
     first_cat=$(get_first_list_item "$fm" "categories")
