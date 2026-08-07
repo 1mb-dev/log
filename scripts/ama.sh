@@ -26,6 +26,14 @@
 #     button. The button edits the draft server-side and publishes without
 #     touching git (F4) or stripping the email. If it ever gets used by mistake,
 #     reconcile with `make pull-from-vps DOMAIN=<domain>`.
+#   - Every ssh call takes -n. None of them pass stdin, and one of them runs
+#     inside a `while read` loop, where ssh would otherwise eat the loop's input
+#     and stop it after one row. Uniform, so wrapping any call in a loop later
+#     stays safe.
+#   - Remote filenames are interpolated into ssh command strings. That is safe
+#     only while markgo generates AMA filenames mechanically (ama-<timestamp>).
+#     If an upstream change ever derives them from reader-supplied text, they
+#     become untrusted input on a path to a root shell -- validate first.
 #
 # SSH: defaults to root because the deploy creates loguser with --shell /bin/false
 # (it cannot ssh). root only touches article files here. On a hardened box, set
@@ -87,6 +95,9 @@ emit_question() {
     local s="$1" first="${1:0:1}" q quote=0
     [[ -z "$s" ]] && quote=1
     [[ "$s" == *$'\n'* ]] && quote=1
+    # Leading OR trailing whitespace. Not SC2055's always-true pattern: the two
+    # sides strip different ends of $s, so both are false for a clean value.
+    # shellcheck disable=SC2055
     [[ "$s" != "${s#[[:space:]]}" || "$s" != "${s%[[:space:]]}" ]] && quote=1
     [[ "$s" == *": "* || "$s" == *" #"* ]] && quote=1
     case "$first" in '!'|'&'|'*'|'?'|'|'|'>'|'%'|'@'|'`'|'"'|"'"|'#'|','|'['|']'|'{'|'}'|':'|'-'|' ') quote=1 ;; esac
@@ -100,7 +111,10 @@ emit_question() {
 
 # Remote: print "slug<TAB>file" for every pending (draft:true) AMA.
 remote_pending() {
-    ssh "$SSH_TARGET" "cd '$REMOTE_ARTICLES' && \
+    # SC2029: $REMOTE_ARTICLES expands locally on purpose -- the remote shell
+    # has no such variable. Same for the other ssh calls below.
+    # shellcheck disable=SC2029
+    ssh -n "$SSH_TARGET" "cd '$REMOTE_ARTICLES' && \
         for f in \$(grep -rls '^type: ama' . 2>/dev/null); do \
             grep -q '^draft: true' \"\$f\" || continue; \
             s=\$(awk -F': ' '/^slug:/{print \$2; exit}' \"\$f\"); \
@@ -111,12 +125,16 @@ remote_pending() {
 cmd_list() {
     local rows; rows=$(remote_pending)
     [[ -n "$rows" ]] || { echo "no pending AMA on $DOMAIN"; return 0; }
-    echo "pending AMA on $DOMAIN:"
+    # Counted with the same expression resolve_from uses, so a header that says
+    # 3 and a body that lists 1 can never disagree quietly again.
+    local n; n=$(grep -c . <<< "$rows")
+    echo "pending AMA on $DOMAIN ($n):"
     echo ""
     while IFS=$'\t' read -r slug file; do
         [[ -n "$slug" ]] || continue
         local body asker
-        body=$(ssh "$SSH_TARGET" "cat '$REMOTE_ARTICLES/${file#./}'")
+        # shellcheck disable=SC2029
+        body=$(ssh -n "$SSH_TARGET" "cat '$REMOTE_ARTICLES/${file#./}'")
         asker=$(awk -F': ' '/^asker:/{print $2; exit}' <<< "$body")
         local q; q=$(extract_question "$body")
         printf "  slug:   %s\n  asker:  %s\n  q:      %s\n  file:   %s\n\n" \
@@ -157,7 +175,8 @@ cmd_build() {
     [[ ! -e "$out" ]] || fail "$out already exists"
 
     local file; file=$(resolve_from "$from")
-    local draft; draft=$(ssh "$SSH_TARGET" "cat '$REMOTE_ARTICLES/${file#./}'")
+    # shellcheck disable=SC2029
+    local draft; draft=$(ssh -n "$SSH_TARGET" "cat '$REMOTE_ARTICLES/${file#./}'")
 
     local asker author date question
     asker=$(awk '/^asker:/{sub(/^asker:[[:space:]]*/,""); print; exit}'   <<< "$draft")
@@ -200,7 +219,8 @@ cmd_clean_draft() {
     done
     [[ -n "$from" ]] || fail "clean-draft needs --from <draft-slug>"
     [[ "$from" =~ ^[a-z0-9]+(-[a-z0-9]+)*$ ]] || fail "--from must be a slug (kebab-case): $from"
-    ssh "$SSH_TARGET" "cd '$REMOTE_ARTICLES' && \
+    # shellcheck disable=SC2029
+    ssh -n "$SSH_TARGET" "cd '$REMOTE_ARTICLES' && \
         f=\$(grep -rls '^slug: $from' . 2>/dev/null | head -1); \
         [ -n \"\$f\" ] || { echo 'ama: no draft with slug $from on remote' >&2; exit 1; }; \
         grep -q '^type: ama' \"\$f\" && grep -q '^draft: true' \"\$f\" \
@@ -216,6 +236,6 @@ case "$sub" in
     list)        cmd_list "$@" ;;
     build)       cmd_build "$@" ;;
     clean-draft) cmd_clean_draft "$@" ;;
-    -h|--help)   sed -n '2,48p' "$0" | sed -e 's/^# //' -e 's/^#//' ;;
+    -h|--help)   awk 'NR==1{next} /^#/{sub(/^# ?/,""); print; next} {exit}' "$0" ;;
     *) fail "unknown subcommand: $sub (list|build|clean-draft)" ;;
 esac
