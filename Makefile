@@ -42,10 +42,17 @@ DEPLOY_USER  ?= loguser
 DEPLOY_PATH  ?= /opt/$(DOMAIN)
 SERVICE_NAME ?= log
 
-.PHONY: help fetch-markgo build deploy verify clean pull-from-vps confirm-env
+.PHONY: help lint fetch-markgo build deploy verify clean pull-from-vps confirm-env
 
 help: ## Show this help
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
+
+lint: ## Shellcheck the scripts/ helpers
+	@command -v shellcheck >/dev/null 2>&1 || { \
+		echo "shellcheck not found -- install it (brew install shellcheck) or skip: this is a local gate, not CI"; \
+		exit 1; \
+	}
+	shellcheck scripts/*.sh
 
 fetch-markgo: ## Build the markgo binary for $(GOOS)/$(GOARCH)
 	@mkdir -p $(BUILD_DIR)
