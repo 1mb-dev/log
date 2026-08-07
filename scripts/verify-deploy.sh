@@ -82,6 +82,34 @@ if ! curl -fsS -D - -o /dev/null "$BASE/" | grep -qi '^strict-transport-security
 fi
 echo "  ok  hsts header"
 
+# Admin JSON endpoints must not answer an anonymous caller.
+#
+# The Accept header is the whole point of this check, so do not add one: curl
+# sends */*, and that non-committal case is exactly what markgo <= v3.30.1 fell
+# through on. Its soft-auth path branched on `Accept: application/json` to choose
+# between a 401 and the login overlay, so */* (curl's default, and most scripts)
+# matched neither branch and reached the handler -- which for these two JSON-only
+# endpoints returned the payload in full: Go version, environment, heap and GC
+# stats, uptime, article/draft/tag counts. Probing with an explicit Accept passes
+# against a vulnerable build and proves nothing. Fixed upstream in v3.31.0.
+#
+# 404 is a pass: markgo only registers /admin when ADMIN_USERNAME and
+# ADMIN_PASSWORD are both set, so a fork running without them has no route here.
+# What must never happen is a 2xx -- that is the deploy serving the data.
+refuses_anonymous() {
+  local path="$1" label="$2" code
+  code="$(status_of "$path")"
+  case "$code" in
+    401|403) echo "  ok  $label refuses anonymous (HTTP $code)" ;;
+    404)     echo "  ok  $label absent (admin disabled)" ;;
+    2??)     echo "FAIL: $label ($path) served an anonymous caller -- HTTP $code"; exit 1 ;;
+    *)       echo "FAIL: $label ($path) -- unexpected HTTP $code"; exit 1 ;;
+  esac
+}
+
+refuses_anonymous /admin/metrics "admin metrics"
+refuses_anonymous /admin/stats   "admin stats"
+
 # TLS handshake + certificate. The probes above all ride HTTPS, so a broken
 # handshake would already have failed them -- this adds the checks they cannot
 # make (which names the cert covers, how long it has left) and reports the
