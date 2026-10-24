@@ -10,11 +10,15 @@
 #
 # Tunables (env vars or make variables):
 #   MARKGO_REF    Git ref of markgo to clone (only used when MARKGO_SRC is absent).
-#                 Default: v3.24.0.
+#                 Default: the MARKGO_REF line below.
 #   MARKGO_SRC    Path to a local markgo checkout. If present, builds the currently
 #                 checked-out ref; if absent, MARKGO_REF is cloned to build/markgo-src.
 #                 Default: ../markgo.
 #   GOOS, GOARCH  Build target. Default: linux/amd64.
+#   GO_TOOLCHAIN  Go toolchain for the build, passed as GOTOOLCHAIN. markgo's go.mod
+#                 carries no toolchain line, so without this the build inherits the
+#                 local Go and its stdlib CVEs. Keep it on the Go markgo's
+#                 release.yml ships with.
 #
 # Deploy tunables -- defaults match log.1mb.dev's production. Forkers override.
 #   DOMAIN        Required. Public hostname. Example: log.1mb.dev.
@@ -29,10 +33,11 @@
 # pin to any tag or commit and inspect the build line. A curl-based fetch of
 # the published artifacts is a future simplification.
 
-MARKGO_REF   ?= v3.31.0
+MARKGO_REF   ?= v3.31.1
 MARKGO_SRC   ?= ../markgo
 GOOS         ?= linux
 GOARCH       ?= amd64
+GO_TOOLCHAIN ?= go1.27.3
 BUILD_DIR    := build
 BINARY       := $(BUILD_DIR)/markgo
 
@@ -58,13 +63,13 @@ fetch-markgo: ## Build the markgo binary for $(GOOS)/$(GOARCH)
 	@mkdir -p $(BUILD_DIR)
 	@if [ -d "$(MARKGO_SRC)" ]; then \
 		echo "==> Using local markgo checkout at $(MARKGO_SRC) (current ref)"; \
-		GOOS=$(GOOS) GOARCH=$(GOARCH) $(MAKE) -C $(MARKGO_SRC) build; \
+		GOTOOLCHAIN=$(GO_TOOLCHAIN) GOOS=$(GOOS) GOARCH=$(GOARCH) $(MAKE) -C $(MARKGO_SRC) build; \
 		cp $(MARKGO_SRC)/build/markgo $(BINARY); \
 	else \
 		echo "==> Cloning markgo $(MARKGO_REF) into $(BUILD_DIR)/markgo-src"; \
 		rm -rf $(BUILD_DIR)/markgo-src; \
 		git clone --depth 1 --branch $(MARKGO_REF) https://github.com/1mb-dev/markgo.git $(BUILD_DIR)/markgo-src; \
-		GOOS=$(GOOS) GOARCH=$(GOARCH) $(MAKE) -C $(BUILD_DIR)/markgo-src build; \
+		GOTOOLCHAIN=$(GO_TOOLCHAIN) GOOS=$(GOOS) GOARCH=$(GOARCH) $(MAKE) -C $(BUILD_DIR)/markgo-src build; \
 		cp $(BUILD_DIR)/markgo-src/build/markgo $(BINARY); \
 	fi
 	@echo "==> Built $(BINARY) ($(GOOS)/$(GOARCH))"
