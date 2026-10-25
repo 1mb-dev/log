@@ -31,3 +31,6 @@ inbox/
 
 # Playwright MCP session artifacts (snapshots, console logs, screenshots)
 .playwright-mcp/
+
+# Local agent configuration
+.claude/
