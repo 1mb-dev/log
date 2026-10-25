@@ -1,6 +1,6 @@
 ---
 title: The Repo Is Still Alive
-description: Discipline and depletion produce the same commit log. The tell is not what gets closed — it's whether new work stops getting opened.
+description: Discipline and depletion produce the same commit log. The tell is not what gets closed. It's whether new work stops getting opened.
 date: "2026-07-31T10:00:00Z"
 tags:
   - solo

@@ -1,6 +1,6 @@
 ---
 title: What You Leave Unlearned
-description: A tool's real cost isn't install and import — it's the weeks to fluency, the upgrade you debug alone. The fastest solo builders learn the fewest.
+description: A tool's real cost isn't install and import. It's the weeks to fluency, the upgrade you debug alone. The fastest solo builders learn the fewest.
 date: "2026-07-08T10:00:00Z"
 tags:
   - solo

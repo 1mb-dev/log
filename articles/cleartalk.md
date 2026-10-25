@@ -13,6 +13,6 @@ link_url: https://cleartalk.1mb.dev
 
 Draft the message before sending.
 
-Hard things go better when said twice — once to yourself, once for real.
+Hard things go better when said twice: once to yourself, once for real.
 
 Know what to say before you say it.

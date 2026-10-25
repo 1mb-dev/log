@@ -1,6 +1,6 @@
 ---
 title: The Audience That Wasn't There
-description: "Three months of silence, then a reference — the dashboard counts who said so, not who read."
+description: "Three months of silence, then a reference. The dashboard counts who said so, not who read."
 date: "2026-07-28T10:00:00Z"
 tags:
   - community

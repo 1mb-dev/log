@@ -1,6 +1,6 @@
 ---
 title: The Long Game
-description: A year of solo building is not a milestone — it is what happens when the builder keeps showing up.
+description: A year of solo building is not a milestone. It is what happens when the builder keeps showing up.
 date: "2026-06-17T10:00:00Z"
 tags:
   - philosophy

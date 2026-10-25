@@ -1,6 +1,6 @@
 ---
 title: The Design Decision
-description: "The gap between \"works\" and \"feels right\" — and the designer hat nobody certified you to wear."
+description: "The gap between \"works\" and \"feels right\", and the designer hat nobody certified you to wear."
 date: "2026-04-24T10:00:00Z"
 tags:
   - craft

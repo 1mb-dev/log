@@ -1,6 +1,6 @@
 ---
 title: Shipped And Walked Away
-description: Not every project is a garden. Some are monuments — done, shipped, and better off untouched.
+description: "Not every project is a garden. Some are monuments: done, shipped, and better off untouched."
 date: "2026-06-23T10:00:00Z"
 tags:
   - philosophy

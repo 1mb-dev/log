@@ -1,6 +1,6 @@
 ---
 title: The Ninety Percent
-description: "The unglamorous 90% of solo building — and why the 10% makes it worth it."
+description: "The unglamorous 90% of solo building, and why the 10% makes it worth it."
 date: "2026-03-04T10:00:00Z"
 tags:
   - reality

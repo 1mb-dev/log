@@ -1,6 +1,6 @@
 ---
 title: The Update
-description: The upkeep no one ships a post about — and most of what keeps a project alive.
+description: The upkeep no one ships a post about, and most of what keeps a project alive.
 date: "2026-06-12T10:00:00Z"
 tags:
   - maintenance

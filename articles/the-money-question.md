@@ -1,6 +1,6 @@
 ---
 title: The Money Question
-description: Most repos are the gym, not a startup — built to learn, not earn. But some quietly stopped being either.
+description: "Most repos are the gym, not a startup: built to learn, not earn. But some quietly stopped being either."
 date: "2026-06-05T10:00:00Z"
 tags:
   - solo

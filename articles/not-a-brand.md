@@ -1,6 +1,6 @@
 ---
 title: Not A Brand
-description: "No courses, no coaching, no community tier — and why that's enough."
+description: "No courses, no coaching, no community tier. And why that's enough."
 date: "2026-03-27T10:00:00Z"
 tags:
   - philosophy

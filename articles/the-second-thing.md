@@ -1,6 +1,6 @@
 ---
 title: The Second Thing
-description: "The second project is the first one's rent — proof you can maintain, not just build."
+description: "The second project is the first one's rent: proof you can maintain, not just build."
 date: "2026-04-20T10:00:00Z"
 tags:
   - philosophy

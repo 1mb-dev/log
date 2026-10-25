@@ -1,6 +1,6 @@
 ---
 title: The Old Project
-description: "The quiet project that just runs for a decade — the most underrated kind of shipping."
+description: "The quiet project that just runs for a decade: the most underrated kind of shipping."
 date: "2026-04-13T10:00:00Z"
 tags:
   - philosophy
