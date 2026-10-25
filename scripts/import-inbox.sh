@@ -238,6 +238,12 @@ process_entry() {
     body_first=$(awk '/^---$/{c++; next} c==2 && /^[^[:space:]]/{print; exit}' "$md_file")
     [[ "$body_first" =~ ^"# " ]] && fail "$slug" "body begins with '# ' heading (would duplicate title)"
 
+    # House style: no em-dashes in frontmatter or body. Drop this gate if your
+    # corpus uses them.
+    local dash_line
+    dash_line=$(awk '/—/{print NR; exit}' "$md_file")
+    [[ -z "$dash_line" ]] || fail "$slug" "em-dash on line $dash_line. Use ':', ',', '.' or parentheses instead."
+
     # Description gate: a present description must summarize the post, not echo
     # it back. On essays it renders as the visible dek above the body; on every
     # type it drives meta/OG/RSS/search. Repeating line one is the
