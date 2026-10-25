@@ -272,6 +272,13 @@ process_entry() {
     if [[ "$first_cat" == "Thoughts" && "$post_type" != "thought" ]]; then
         fail "$slug" "type must be 'thought' when categories is Thoughts (got: ${post_type:-<unset>}). Set 'type: thought' in frontmatter."
     fi
+    # Same mismatch for link posts, both directions, and a link post with no
+    # link_url has nothing to point at.
+    if [[ "$first_cat" == "Links" || "$post_type" == "link" ]]; then
+        [[ "$first_cat" == "Links" ]] || fail "$slug" "categories must be Links when type is link (got: $first_cat)."
+        [[ "$post_type" == "link" ]] || fail "$slug" "type must be 'link' when categories is Links (got: ${post_type:-<unset>}). Set 'type: link' in frontmatter."
+        [[ -n "$(get_scalar "$fm" "link_url")" ]] || fail "$slug" "link post has no link_url in frontmatter."
+    fi
     local tag_block tags=() t
     tag_block=$(get_list_items "$fm" "tags")
     while IFS= read -r t; do
