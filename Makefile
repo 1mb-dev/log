@@ -18,7 +18,9 @@
 #   GO_TOOLCHAIN  Go toolchain for the build, passed as GOTOOLCHAIN. markgo's go.mod
 #                 carries no toolchain line, so without this the build inherits the
 #                 local Go and its stdlib CVEs. Keep it on the Go markgo's
-#                 release.yml ships with.
+#                 release.yml ships with. `make build` refuses a binary built on
+#                 any other Go when this is an exact goX.Y.Z pin; local, auto and
+#                 +path forms pick the version at build time and skip the check.
 #
 # Deploy tunables -- defaults match log.1mb.dev's production. Forkers override.
 #   DOMAIN        Required. Public hostname. Example: log.1mb.dev.
@@ -83,6 +85,15 @@ build: fetch-markgo ## Verify the deploy bundle is ready
 	  echo "         or check out $(MARKGO_REF) in $(MARKGO_SRC) before building."; \
 	  exit 1; \
 	fi
+	@case "$(GO_TOOLCHAIN)" in go1.*[0-9]) \
+	  built=$$(go version $(BINARY) | awk '{print $$2}'); \
+	  if [ "$$built" != "$(GO_TOOLCHAIN)" ]; then \
+	    echo "==> toolchain mismatch: $(BINARY) was built on $$built, GO_TOOLCHAIN is $(GO_TOOLCHAIN)."; \
+	    echo "    Likely cause: the markgo build at $(MARKGO_SRC) does not honour GOTOOLCHAIN."; \
+	    echo "    Fix: build with GOTOOLCHAIN=$(GO_TOOLCHAIN) set there, then rerun make build."; \
+	    exit 1; \
+	  fi ;; \
+	esac
 	@ls articles/*.md >/dev/null 2>&1 || echo "warn: articles/ is empty -- replace _example.md before deploy"
 	@echo "==> Ready: $(BINARY) (stamped $(MARKGO_REF)) + articles/ + static/"
 

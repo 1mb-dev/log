@@ -27,6 +27,7 @@ Deploy and configuration changes for this deployment of markgo. Format based on 
 - `scripts/verify-deploy.sh` — smoke-test runner (health, feed, sitemap, robots, manifest, HSTS). Uses GET (not HEAD) so it doesn't hide markgo's HEAD-routing quirk.
 - `make deploy` — idempotent push of binary + content + .env, systemd unit install with templated `User`/paths/`SyslogIdentifier`, restart, then verify.
 - `make build`: stamp-mismatch guard. `build/markgo` must embed `MARKGO_REF` as a clean tag (`strings build/markgo | grep -Fxq "$(MARKGO_REF)"`); else refuse with a fix hint. Catches the dirty-tag trap where `MARKGO_SRC` points at a working tree one commit past the tag (e.g. on `main`), producing `vX.Y.Z-1-gSHA` stamps that contaminate `/health` and the SW cache version.
+- `make build`: toolchain guard. `go version build/markgo` must report `GO_TOOLCHAIN` when it is an exact `goX.Y.Z` pin; else refuse. Catches a markgo build that ignores `GOTOOLCHAIN` and ships on the local Go with its stdlib CVEs.
 - `make verify` — standalone smoke-test against `DOMAIN`.
 - Demo-corpus stance excludes meta-artifacts: `banner-sources/` removed; HTML mockups live in author repo.
 - M3 brand layer: `static/img/favicon{.svg,-32x32.png}`, `static/img/apple-touch-icon.png`, `static/og-default.png`, `static/css/themes/minimal.css` (1mb tokens overriding markgo's embedded), `static/css/fonts.css` (Space Mono replacing Inter + Fira Code), `static/fonts/space-mono/` woff2 (latin subset, 400 + 700).
