@@ -10,7 +10,10 @@
 #   inbox/<slug>/banner.png  -> static/img/banners/<slug>.png
 #
 # If an inbox entry also contains banner.html, it is ignored -- editorial
-# HTML sources for banners live in the author repo, not tracked here.
+# HTML sources for banners are not tracked here.
+#
+# INBOX_DIR (default: inbox) points the script at another staging directory,
+# relative to the repo root or absolute. Entries there are moved out the same way.
 #
 # Source-agnostic: knows nothing about who dropped the entries. Halts on the
 # first failed validation (explicit triage). Does not commit, push, or deploy
@@ -28,7 +31,7 @@ set -euo pipefail
 # Run from the repo root regardless of invocation dir (paths below are relative).
 cd "$(dirname "$0")/.."
 
-INBOX_DIR="inbox"
+INBOX_DIR="${INBOX_DIR:-inbox}"
 ARTICLES_DIR="articles"
 BANNERS_DIR="static/img/banners"
 
@@ -291,7 +294,7 @@ process_entry() {
     [[ -n "$banner_field" ]] && has_banner_field=1
 
     if [[ -f "$banner_html" ]]; then
-        echo "  [skip] banner.html in $slug/ ignored -- HTML sources live in author repo, not tracked here." >&2
+        echo "  [skip] banner.html in $slug/ ignored -- HTML sources are not tracked here." >&2
     fi
 
     if [[ -f "$banner_png" ]]; then
