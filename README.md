@@ -6,7 +6,7 @@ The published content under `articles/` is the maintainer's writing. The deploy 
 
 ## Quick deploy
 
-Prerequisites: a Linux VPS you can `ssh` to, a domain whose A record points at it (required before first deploy for Let's Encrypt's HTTP-01 challenge), Go 1.26+ and `make` locally, Caddy v2 on the VPS.
+Prerequisites: a Linux VPS you can `ssh` to, a domain whose A record points at it (required before first deploy for Let's Encrypt's HTTP-01 challenge), Go 1.21+ and `make` locally (the build fetches the Go pinned as `GO_TOOLCHAIN`), Caddy v2 on the VPS.
 
 ```sh
 # Fork on GitHub, then clone your fork

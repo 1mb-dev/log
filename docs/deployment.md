@@ -8,7 +8,7 @@ This guide is grounded in the live reference deployment at `log.1mb.dev`. Every 
 
 - A Linux VPS reachable over `ssh` with root or sudo. The reference deploy runs Debian 13 (trixie).
 - A domain you control with DNS edit access.
-- Go 1.26+ and `make` on your **local** machine. The server only needs the resulting binary.
+- Go 1.21+ and `make` on your **local** machine. The build downloads the Go release pinned in the Makefile (`GO_TOOLCHAIN`), so the local Go only needs to be able to switch toolchains. The server only needs the resulting binary.
 - Caddy v2 on the VPS. Nginx works too if you adapt the vhost — substitute the relevant block from markgo's `docs/deployment.md`.
 
 If you forked this repo, replace `log.1mb.dev` with your domain and `1mb-dev/log` with your repo path before following along.
