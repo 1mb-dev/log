@@ -7,7 +7,7 @@
 # answer locally, so the canonical copy lives in git (F4).
 #
 # Mechanics only. The judgment -- pick the decision/angle, draft the answer,
-# voice + huddle review -- is the operator's; see todos/ritual-ama-process.md.
+# voice + huddle review -- is the operator's.
 # Commit, push, and deploy stay gated to the operator. The one destructive
 # remote action (clean-draft) is a separate, guarded subcommand.
 #

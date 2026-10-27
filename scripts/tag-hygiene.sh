@@ -2,7 +2,7 @@
 # tag-hygiene.sh -- periodic audit of articles/ tag taxonomy.
 #
 # Reports drift from the canonical taxonomy decided in the craftful pass
-# (todos/sketch-tag-hygiene.md, and codified inline below):
+# (codified inline below):
 # blocked-synonym reintroduction, over-cap articles, brand-new tags
 # introduced since the last canonical list, singletons that have
 # graduated to multi-article status, and the current head/middle/tail
@@ -41,7 +41,7 @@ done
 # Canonical taxonomy is in Python heredoc below. When it changes:
 #   1. Update the BLOCKED_TAGS / CANONICAL_TAGS lists below.
 #   2. Mirror the same change in scripts/import-inbox.sh.
-#   3. Note the rationale in todos/sketch-tag-hygiene.md or the relevant doc.
+#   3. Put the rationale in the commit message.
 #
 # Visual weighting on /tags is operator-tuned, not auto-calibrated. log's
 # static/css/themes/1mb.css buckets .tag-cloud-item by data-count (currently

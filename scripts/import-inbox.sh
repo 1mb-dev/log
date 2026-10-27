@@ -38,12 +38,12 @@ BANNERS_DIR="static/img/banners"
 VALID_CATEGORIES=(Essays Thoughts Links AMA)
 DATE_PATTERN='^"?[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(Z|[+-][0-9]{2}:[0-9]{2})"?$'
 
-# Tag taxonomy gates. The craftful pass (see todos/sketch-tag-hygiene.md
-# and the matching arrays in scripts/tag-hygiene.sh) retired these
-# synonyms and placeholders. Reintroducing one on import is almost
-# always a regression -- a forgotten oncall/ops/devops collapse, or a
-# too-generic career/building/pm placeholder. Edit both this list and
-# the one in scripts/tag-hygiene.sh together when the taxonomy evolves.
+# Tag taxonomy gates. The craftful pass (see the matching arrays in
+# scripts/tag-hygiene.sh) retired these synonyms and placeholders.
+# Reintroducing one on import is almost always a regression -- a forgotten
+# oncall/ops/devops collapse, or a too-generic career/building/pm placeholder.
+# Edit both this list and the one in scripts/tag-hygiene.sh together when the
+# taxonomy evolves.
 BLOCKED_TAGS=(
     1mb-dev attention building career choices decisions devops drafting
     ecosystem feed introduction language launch mood oncall ops perfection
@@ -267,7 +267,7 @@ process_entry() {
     [[ -n "$first_cat" ]] || fail "$slug" "missing required frontmatter: categories"
     in_array "$first_cat" "${VALID_CATEGORIES[@]}" || fail "$slug" "category not in vocabulary (got: $first_cat, allowed: ${VALID_CATEGORIES[*]})"
 
-    # Tag taxonomy gates (see todos/sketch-tag-hygiene.md).
+    # Tag taxonomy gates.
 
     # type frontmatter drives card shape in markgo. categories: Thoughts alone
     # renders an article-card (linked title); type: thought renders the full-body
