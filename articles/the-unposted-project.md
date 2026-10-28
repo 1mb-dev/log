@@ -4,7 +4,7 @@ description: "Discovery without a launch: some projects earn stars the quiet way
 date: "2026-06-30T10:00:00Z"
 tags:
   - shipping
-  - discovery
+  - open-source
   - solo
 categories:
   - Thoughts
