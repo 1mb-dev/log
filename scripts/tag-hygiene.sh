@@ -37,6 +37,13 @@ for arg in "$@"; do
     esac
 done
 
+python3 -c 'import yaml' 2>/dev/null || {
+    echo "PyYAML not importable by $(command -v python3)" >&2
+    echo "install: python3 -m pip install --user pyyaml" >&2
+    echo "  (externally-managed Python, e.g. Homebrew's: add --break-system-packages, or use a venv)" >&2
+    exit 1
+}
+
 # ----------------------------------------------------------------------------
 # Canonical taxonomy is in Python heredoc below. When it changes:
 #   1. Update the BLOCKED_TAGS / CANONICAL_TAGS lists below.
