@@ -115,7 +115,7 @@ Deploy and configuration changes for this deployment of markgo. Format based on 
 ### Notes
 
 - markgo target version: `v3.14.0` (dedicated-route polish — `/about` reach section consolidates AMA + mailto and reads from v3.11.0 `AMA_PAGE_*` env vars, new `/p` index lists all pages with a footer link, sitemap now includes `/about` + `/p` + `/p/<slug>`, all `/writing/<slug>` emissions route through `CanonicalURLFor`; markgo#75 closed).
-- Reference deployment binds markgo to `127.0.0.1:3001` (configured via `PORT` in `.env`) to coexist with other services on the same host.
+- Reference deployment runs markgo on port `3001` (configured via `PORT` in `.env`) to coexist with other services on the same host. Markgo listens on every interface; `ufw` keeps the port closed.
 - AMA spam protection is **math captcha + honeypot + `RATE_LIMIT_CONTACT_*`** (not CSRF, contrary to early documentation).
 - RAM is tight on small VPSes (the reference deploy has 464 MiB total; markgo resident ~13-15 MiB). Drop `CACHE_MAX_SIZE` in `.env` if pressure surfaces.
 - Markgo has no `FEATURES_*` config envelope — feature availability is gated per-feature (e.g., AMA + `/compose` require `ADMIN_*` + compose service; contact form requires `EMAIL_HOST`; SEO sub-features are individual `SEO_*` booleans).

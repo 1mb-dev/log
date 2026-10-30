@@ -40,7 +40,17 @@ Verify propagation before continuing:
 dig +short your.domain.example
 ```
 
-The reference deploy uses `log.1mb.dev` (one A record to a single DigitalOcean droplet). Caddy needs ports 80 and 443 reachable from the public internet for the Let's Encrypt HTTP-01 challenge — open them in your firewall before the first deploy.
+The reference deploy uses `log.1mb.dev` (one A record to a single DigitalOcean droplet). Caddy needs ports 80 and 443 reachable from the public internet for the Let's Encrypt HTTP-01 challenge. Markgo's `PORT` has to stay closed: it listens on every interface, so an open port serves plain HTTP past Caddy. Set the firewall before the first deploy. With `ufw`:
+
+```sh
+sudo ufw default deny incoming
+sudo ufw allow 22/tcp
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw enable
+```
+
+A cloud firewall with the same three rules works too.
 
 ## 3. Build the markgo binary
 
@@ -106,7 +116,7 @@ Re-running `make deploy` is safe and idempotent: rsync only ships what changed, 
 
 ## 5. Caddy
 
-Markgo binds to localhost on `PORT` (default `3001`); Caddy fronts it for TLS, HTTP/2, and compression. The reference vhost is at `deploy/Caddyfile.example`:
+Markgo listens on `PORT` (default `3001`) on every interface and has no host setting, so the firewall from step 2 is what keeps it private. Caddy fronts it for TLS, HTTP/2, and compression. The reference vhost is at `deploy/Caddyfile.example`:
 
 ```
 log.1mb.dev {
@@ -266,6 +276,7 @@ If you forked this repo to deploy your own blog:
 - [ ] Decide on `STATIC_PATH`: leave empty if you have no static overrides; set to `./static` once you drop favicons, OG image, fonts, or theme CSS into `./static/`. Overlay mode falls back to markgo's embedded defaults for everything you didn't replace.
 - [ ] Edit `deploy/log.service.example` if you want to ship `User=` other than `markgo` directly (or just override `DEPLOY_USER` on the `make deploy` command line).
 - [ ] Edit `deploy/Caddyfile.example` with your domain.
+- [ ] Confirm `PORT` is closed from outside: `curl -m 5 http://your.domain.example:3001/health` must fail.
 - [ ] Add `static/og-default.png` (1200×630 PNG) for default social cards.
 - [ ] Update `README.md` and `CHANGELOG.md` to reflect your fork.
 - [ ] Decide if you want `/var/log/caddy/` access logs (referenced by the vhost) — create the directory or drop the `log { … }` block.

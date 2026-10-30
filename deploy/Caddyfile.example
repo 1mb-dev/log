@@ -6,8 +6,9 @@
 # your domain before deploying.
 
 log.1mb.dev {
-	# Markgo binds to localhost. Caddy fronts it for TLS, compression, and access
-	# logging. The port must match PORT in .env. This reference deployment uses 3001
+	# Markgo listens on every interface, so keep PORT closed at the firewall. Caddy
+	# fronts it for TLS, compression, and access logging. The port must match PORT
+	# in .env. This reference deployment uses 3001
 	# to coexist with other services on the same host. Source-controlled static
 	# assets (banners, favicons, og-default, theme CSS, fonts) ship from
 	# /opt/log.1mb.dev/static and overlay markgo's embedded defaults via
